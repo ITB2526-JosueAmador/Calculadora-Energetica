@@ -388,7 +388,7 @@ function calcWithReductions() {
 
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', async () => {
-  // Envolvemos todo en try-catch individuales. Si uno falla, el resto sigue funcionando.
+  // Envolvemos en try catch.
   try { await loadData(); } catch(e) { console.error('Error loadData:', e); }
   try { initTabs(); } catch(e) { console.error('Error initTabs:', e); }
   try { initAccordions(); } catch(e) { console.error('Error initAccordions:', e); }
