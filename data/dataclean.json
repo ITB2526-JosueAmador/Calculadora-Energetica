@@ -1,0 +1,144 @@
+{
+  "metadata": {
+    "projecte": "Indicadors de Sostenibilitat - Factures ITB Leaks",
+    "data_creacio": "2025-03-23",
+    "total_factures": 11,
+    "nota_duplicat": "F078-MAIG exclosa per ser duplicat de F078-DIGI",
+    "indicadors_sostenibilitat": {
+      "I1": "Import total amb IVA (€) — impacte econòmic directe",
+      "I2": "IVA suportat (€) — cost fiscal / càrrega tributària",
+      "I3": "Categoria de despesa — classificació per àmbit de sostenibilitat",
+      "I4": "Forma de pagament — traçabilitat i gestió financera responsable"
+    }
+  },
+
+  "factures": [
+    {
+      "id": "F035",
+      "data": "2024-04-30",
+      "proveidor": "Lyreco",
+      "descripcio_resum": "Material oficina: borradors, marcadors, paper A4",
+      "I1_import_total_EUR": 277.13,
+      "I2_iva_suportat_EUR": 48.10,
+      "I3_categoria": "Material Oficina",
+      "I4_forma_pagament": "SEPA DIRECT DEBIT"
+    },
+    {
+      "id": "F036",
+      "data": "2024-05-31",
+      "proveidor": "Lyreco",
+      "descripcio_resum": "Material oficina: recanvis pissarra blanca, paper A4",
+      "I1_import_total_EUR": 261.24,
+      "I2_iva_suportat_EUR": 45.34,
+      "I3_categoria": "Material Oficina",
+      "I4_forma_pagament": "SEPA DIRECT DEBIT"
+    },
+    {
+      "id": "F039",
+      "data": "2024-09-13",
+      "proveidor": "Proveidor NP",
+      "descripcio_resum": "Treballs ferro i fusta: portes i baranes malmeses",
+      "I1_import_total_EUR": 1012.98,
+      "I2_iva_suportat_EUR": 175.81,
+      "I3_categoria": "Manteniment Instal·lacions",
+      "I4_forma_pagament": "Contado / Recibo"
+    },
+    {
+      "id": "F041",
+      "data": "2024-07-05",
+      "proveidor": "Proveidor NP",
+      "descripcio_resum": "Reparació urgent aire condicionat (compressor + filtres)",
+      "I1_import_total_EUR": 348.48,
+      "I2_iva_suportat_EUR": 60.48,
+      "I3_categoria": "Manteniment Instal·lacions",
+      "I4_forma_pagament": "Contado / Recibo"
+    },
+    {
+      "id": "F046",
+      "data": "2024-05-23",
+      "proveidor": "Proveidor NP",
+      "descripcio_resum": "Instal·lació elèctrica: circuits QGP/OGP nous amb control lumínic",
+      "I1_import_total_EUR": 2548.02,
+      "I2_iva_suportat_EUR": 442.22,
+      "I3_categoria": "Manteniment Instal·lacions",
+      "I4_forma_pagament": "Contado / Recibo"
+    },
+    {
+      "id": "F055",
+      "data": "2024-06-20",
+      "proveidor": "Empresa Neteges",
+      "descripcio_resum": "Subministraments higiene: paper, bosses, sabó",
+      "I1_import_total_EUR": 750.26,
+      "I2_iva_suportat_EUR": 130.21,
+      "I3_categoria": "Neteges i Subministraments",
+      "I4_forma_pagament": "Recibo Domiciliado"
+    },
+    {
+      "id": "F056",
+      "data": "2024-05-27",
+      "proveidor": "Empresa Neteges",
+      "descripcio_resum": "Neteja jardí, patis i entrada + transport deixalleria",
+      "I1_import_total_EUR": 454.72,
+      "I2_iva_suportat_EUR": 78.92,
+      "I3_categoria": "Neteges i Subministraments",
+      "I4_forma_pagament": "Recibo Domiciliado"
+    },
+    {
+      "id": "F078",
+      "data": "2024-05-01",
+      "proveidor": "DIGI",
+      "descripcio_resum": "Telecomunicacions: fibra òptica 1Gb",
+      "I1_import_total_EUR": 30.00,
+      "I2_iva_suportat_EUR": 5.21,
+      "I3_categoria": "Telecomunicacions",
+      "I4_forma_pagament": "Domiciliació bancària"
+    },
+    {
+      "id": "F294",
+      "data": "2024-03-04",
+      "proveidor": "O2 (Telefónica)",
+      "descripcio_resum": "Telecomunicacions: fibra 1Gb + mòbil 200GB",
+      "I1_import_total_EUR": 50.00,
+      "I2_iva_suportat_EUR": 8.68,
+      "I3_categoria": "Telecomunicacions",
+      "I4_forma_pagament": "Domiciliació bancària"
+    },
+    {
+      "id": "F327",
+      "data": "2024-06-30",
+      "proveidor": "Lyreco",
+      "descripcio_resum": "Material oficina: recanvis marcadors pissarra negre",
+      "I1_import_total_EUR": 34.36,
+      "I2_iva_suportat_EUR": 5.96,
+      "I3_categoria": "Material Oficina",
+      "I4_forma_pagament": "SEPA DIRECT DEBIT"
+    },
+    {
+      "id": "F328",
+      "data": "2024-10-31",
+      "proveidor": "Lyreco",
+      "descripcio_resum": "Material oficina: paper A4 (30 resmes)",
+      "I1_import_total_EUR": 198.56,
+      "I2_iva_suportat_EUR": 34.46,
+      "I3_categoria": "Material Oficina",
+      "I4_forma_pagament": "SEPA DIRECT DEBIT"
+    }
+  ],
+
+  "resum_indicadors": {
+    "I1_total_despesa_EUR": 5965.75,
+    "I2_total_iva_EUR": 1035.39,
+    "I3_despesa_per_categoria": {
+      "Manteniment Instal·lacions": 3909.48,
+      "Neteges i Subministraments": 1204.98,
+      "Material Oficina": 771.29,
+      "Telecomunicacions": 80.00
+    },
+    "I4_factures_per_forma_pagament": {
+      "SEPA DIRECT DEBIT": 4,
+      "Contado / Recibo": 3,
+      "Recibo Domiciliado": 2,
+      "Domiciliació bancària": 2
+    }
+  }
+}
