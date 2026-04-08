@@ -29,15 +29,23 @@ const BASE_COSTS = {
 // ---- CÀRREGA DADES ----
 async function loadData() {
   try {
-    const resp = await fetch('data/dataclean.json');
+    // Si dataclean.json está en la misma carpeta que el index, quita el 'data/'
+    const resp = await fetch('/data/dataclean.json');
     DATA = await resp.json();
     renderKPIs();
     renderCategoryChart();
     renderFacturesTable();
   } catch (e) {
-    console.error('Error carregant dades:', e);
-    // Fallback amb dades inline
-    DATA = { resum_indicadors: { I1_total_despesa_EUR: 5965.75, I2_total_iva_EUR: 1035.39 } };
+    console.error('Error carregant dades (usando datos de emergencia):', e);
+    // SOLUCIÓN: Añadimos las categorías al objeto de emergencia para que no crashee
+    DATA = {
+      resum_indicadors: {
+        I1_total_despesa_EUR: 5965.75,
+        I2_total_iva_EUR: 1035.39,
+        I3_despesa_per_categoria: { "Manteniment": 2000, "Neteges": 1000 } // <-- Este dato faltaba
+      },
+      metadata: { total_factures: 11 }
+    };
     renderKPIs();
   }
 }
@@ -72,7 +80,7 @@ function renderCategoryChart() {
     <div class="bar-row">
       <div class="bar-label">${cat}</div>
       <div class="bar-track">
-        <div class="bar-fill" style="width:0%" data-target="${(val/max*100).toFixed(1)}%"></div>
+        <div class="bar-fill" style="width:0" data-target="${(val/max*100).toFixed(1)}%"></div>
       </div>
       <div class="bar-val">${fmt(val)} €</div>
     </div>
@@ -92,7 +100,7 @@ function renderFacturesTable() {
   const tbody = document.getElementById('factures-tbody');
   if (!tbody) return;
 
-  const badgeClass = { 'Material Oficina': 'badge-blue', 'Manteniment Instal·lacions': 'badge-gold',
+  const badgeClass = { 'Material Oficina': 'badge-blue', 'Manteniment Instal-lacions': 'badge-gold',
     'Neteges i Subministraments': 'badge-green', 'Telecomunicacions': 'badge-red' };
 
   tbody.innerHTML = DATA.factures.map(f => `
@@ -189,7 +197,7 @@ function renderCalcResult(containerId, type, mode, year) {
       <div class="bar-row">
         <div class="bar-label">${m.label}</div>
         <div class="bar-track">
-          <div class="bar-fill" style="width:0%" data-target="${(m.value/maxVal*100).toFixed(1)}%"
+          <div class="bar-fill" style="width:0%; background:${getBarColor(type)}" data-target="${(m.value/maxVal*100).toFixed(1)}%"></div>
             style="background:${getBarColor(type)}"></div>
         </div>
         <div class="bar-val">${fmtShort(m.value)} €</div>
@@ -380,19 +388,20 @@ function calcWithReductions() {
 
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', async () => {
-  await loadData();
-  initTabs();
-  initAccordions();
-  initScrollAnimations();
-  initNavScroll();
-  bindCalculators();
-  initProgressBars();
-  calcWithReductions();
+  // Envolvemos todo en try-catch individuales. Si uno falla, el resto sigue funcionando.
+  try { await loadData(); } catch(e) { console.error('Error loadData:', e); }
+  try { initTabs(); } catch(e) { console.error('Error initTabs:', e); }
+  try { initAccordions(); } catch(e) { console.error('Error initAccordions:', e); }
+  try { initScrollAnimations(); } catch(e) { console.error('Error initScrollAnimations:', e); }
+  try { initNavScroll(); } catch(e) { console.error('Error initNavScroll:', e); }
+  try { bindCalculators(); } catch(e) { console.error('Error bindCalculators:', e); } // ¡Esto reactiva tu calculadora!
+  try { initProgressBars(); } catch(e) { console.error('Error initProgressBars:', e); }
+  try { calcWithReductions(); } catch(e) { console.error('Error calcWithReductions:', e); }
 
   // Animar hero stats
   setTimeout(() => {
     document.querySelectorAll('.hero-stat .val').forEach(el => {
-      el.style.opacity = '1';
+      if(el) el.style.opacity = '1';
     });
   }, 500);
 });

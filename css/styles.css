@@ -31,7 +31,7 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'DM Sans', sans-serif;
-  background: var(--c-bg);
+  background-color: var(--c-bg);
   color: var(--c-text);
   min-height: 100vh;
   overflow-x: hidden;
