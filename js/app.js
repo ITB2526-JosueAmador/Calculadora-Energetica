@@ -270,8 +270,23 @@ function getBarColor(type) {
 
 // ---- ACCORDION ----
 function initAccordions() {
-  document.querySelectorAll('.accordion-header').forEach(header => {
-    header.addEventListener('click', () => header.parentElement.classList.toggle('open'));
+  // 1. Buscamos todas las cabeceras en las que se puede hacer clic
+  const headers = document.querySelectorAll('.accordion-header');
+
+  headers.forEach(header => {
+    header.addEventListener('click', () => {
+      // 2. Localizamos la "tarjeta" entera a la que pertenece esta cabecera
+      const currentItem = header.closest('.accordion-item');
+
+      // Opcional: Si quieres que al abrir uno se cierren los demás automáticamente,
+      // descomenta las siguientes 3 líneas:
+      // document.querySelectorAll('.accordion-item').forEach(item => {
+      //   if (item !== currentItem) item.classList.remove('active');
+      // });
+
+      // 3. Añadimos o quitamos la clase 'active' para que el CSS haga la magia
+      currentItem.classList.toggle('active');
+    });
   });
 }
 
