@@ -220,21 +220,41 @@ function renderCalcResult(containerId, type, mode, year, scenario) {
     `).join('');
   }
 
-  // Gràfic de barres
+// Gràfic de barres
   const chartContainer = container.querySelector('.monthly-chart');
   if (chartContainer) {
-    const maxVal = Math.max(...months.map(m => m.value));
-    const color  = getBarColor(type);
+    const { months: referenceMonths } = calcProjection(type, mode, year, 'pessimist');
+    const maxVal = Math.max(...referenceMonths.map(m => m.value));
+    const color = getBarColor(type);
 
-    chartContainer.innerHTML = months.map(m => {
-      const heightPct = ((m.value / maxVal) * 100).toFixed(1);
-      return `
-        <div class="bar-col">
-          <div class="bar" style="height:${heightPct}%;background:${color}"></div>
-          <div class="bar-lbl">${m.label}</div>
-        </div>
-      `;
-    }).join('');
+    // Comprobamos si las barras ya están dibujadas en el HTML
+    const existingBars = chartContainer.querySelectorAll('.bar');
+
+    if (existingBars.length === months.length) {
+      // SI YA EXISTEN: Solo actualizamos la altura y el color.
+      // Al no borrar el HTML, la transición CSS hará la animación fluida.
+      months.forEach((m, index) => {
+        const heightPct = ((m.value / maxVal) * 100).toFixed(1);
+        existingBars[index].style.height = `${heightPct}%`;
+        existingBars[index].style.background = color;
+      });
+    } else {
+      // SI NO EXISTEN (es la primera vez que se carga): Creamos el HTML
+      // y añadimos la propiedad CSS 'transition' en línea.
+      chartContainer.innerHTML = months.map(m => {
+        const heightPct = ((m.value / maxVal) * 100).toFixed(1);
+        return `
+          <div class="bar-col">
+            <div class="bar" style="
+              height: ${heightPct}%; 
+              background: ${color}; 
+              transition: height 0.5s ease-out, background 0.5s ease-out;
+            "></div>
+            <div class="bar-lbl">${m.label}</div>
+          </div>
+        `;
+      }).join('');
+    }
   }
 }
 
