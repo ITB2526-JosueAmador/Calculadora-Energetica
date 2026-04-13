@@ -3,10 +3,8 @@
    app.js — Lògica principal, càlculs i visualitzacions
    ============================================================ */
 
-// ---- DADES GLOBALS ----
 let DATA = null;
 
-// Factors estacionals mensuals (1.0 = base)
 const SEASONAL = {
   electric: [1.30, 1.25, 1.05, 0.90, 0.85, 0.80, 0.80, 0.82, 0.95, 1.05, 1.20, 1.35],
   water:    [0.75, 0.72, 0.80, 0.90, 1.05, 1.15, 1.35, 1.30, 1.05, 0.90, 0.78, 0.75],
@@ -15,34 +13,44 @@ const SEASONAL = {
 };
 
 const MONTHS_CA = ['Gen','Feb','Mar','Abr','Mai','Jun','Jul','Ago','Set','Oct','Nov','Des'];
-const MONTHS_FULL = ['Gener','Febrer','Març','Abril','Maig','Juny',
-                     'Juliol','Agost','Setembre','Octubre','Novembre','Desembre'];
 
-// Costos reals extretes del JSON (estimats per categoria)
 const BASE_COSTS = {
-  electric: 2548.02 / 12,    // F046 instal·lació elèctrica / anualitzada
-  water:    454.72 / 12,     // F056 neteja jardí (referència aigua)
-  office:   771.29 / 12,     // total Material Oficina / 12
-  cleaning: 1204.98 / 12,    // total Neteges i Subministraments / 12
+  electric: 2548.02 / 12,
+  water:    454.72  / 12,
+  office:   771.29  / 12,
+  cleaning: 1204.98 / 12,
+};
+
+// Factor multiplicador per escenari
+// opt = millores aplicades (estalvi ~15-25%)
+// pessimist = sense millores + increment extra (~10-15%)
+const SCENARIO_FACTORS = {
+  base:      1.00,
+  opt:       0.82,   // −18%: millores energètiques / digitalització / eco
+  pessimist: 1.12,   // +12%: sense cap millora + increment addicional
+};
+
+const SCENARIO_LABELS = {
+  base:      'Base',
+  opt:       'Optimista',
+  pessimist: 'Pessimista',
 };
 
 // ---- CÀRREGA DADES ----
 async function loadData() {
   try {
-    // Si dataclean.json está en la misma carpeta que el index, quita el 'data/'
     const resp = await fetch('/data/dataclean.json');
     DATA = await resp.json();
     renderKPIs();
     renderCategoryChart();
     renderFacturesTable();
   } catch (e) {
-    console.error('Error carregant dades (usando datos de emergencia):', e);
-    // SOLUCIÓN: Añadimos las categorías al objeto de emergencia para que no crashee
+    console.error('Error carregant dades (usant dades d\'emergència):', e);
     DATA = {
       resum_indicadors: {
         I1_total_despesa_EUR: 5965.75,
         I2_total_iva_EUR: 1035.39,
-        I3_despesa_per_categoria: { "Manteniment": 2000, "Neteges": 1000 } // <-- Este dato faltaba
+        I3_despesa_per_categoria: { "Manteniment": 2000, "Neteges": 1000 }
       },
       metadata: { total_factures: 11 }
     };
@@ -54,16 +62,16 @@ async function loadData() {
 function renderKPIs() {
   if (!DATA) return;
   const r = DATA.resum_indicadors;
-  document.getElementById('kpi-total').textContent   = fmt(r.I1_total_despesa_EUR) + ' €';
-  document.getElementById('kpi-iva').textContent      = fmt(r.I2_total_iva_EUR) + ' €';
-  document.getElementById('kpi-factures').textContent = DATA.metadata?.total_factures || 11;
-  document.getElementById('kpi-categories').textContent = Object.keys(r.I3_despesa_per_categoria).length;
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  set('kpi-total',      fmt(r.I1_total_despesa_EUR) + ' €');
+  set('kpi-iva',        fmt(r.I2_total_iva_EUR) + ' €');
+  set('kpi-factures',   DATA.metadata?.total_factures || 11);
+  set('kpi-categories', Object.keys(r.I3_despesa_per_categoria).length);
 }
 
 function fmt(n) {
   return n.toLocaleString('ca-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
-
 function fmtShort(n) {
   return n.toLocaleString('ca-ES', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
@@ -71,8 +79,8 @@ function fmtShort(n) {
 // ---- BAR CHART CATEGORIES ----
 function renderCategoryChart() {
   if (!DATA) return;
-  const cats = DATA.resum_indicadors.I3_despesa_per_categoria;
-  const max = Math.max(...Object.values(cats));
+  const cats      = DATA.resum_indicadors.I3_despesa_per_categoria;
+  const max       = Math.max(...Object.values(cats));
   const container = document.getElementById('category-chart');
   if (!container) return;
 
@@ -86,7 +94,6 @@ function renderCategoryChart() {
     </div>
   `).join('');
 
-  // Animate after render
   setTimeout(() => {
     container.querySelectorAll('.bar-fill').forEach(el => {
       el.style.width = el.dataset.target;
@@ -100,8 +107,12 @@ function renderFacturesTable() {
   const tbody = document.getElementById('factures-tbody');
   if (!tbody) return;
 
-  const badgeClass = { 'Material Oficina': 'badge-blue', 'Manteniment Instal-lacions': 'badge-gold',
-    'Neteges i Subministraments': 'badge-green', 'Telecomunicacions': 'badge-red' };
+  const badgeClass = {
+    'Material Oficina':              'badge-blue',
+    'Manteniment Instal-lacions':    'badge-gold',
+    'Neteges i Subministraments':    'badge-green',
+    'Telecomunicacions':             'badge-red',
+  };
 
   tbody.innerHTML = DATA.factures.map(f => `
     <tr>
@@ -119,66 +130,86 @@ function renderFacturesTable() {
 
 // ---- TABS ----
 function initTabs() {
-  document.querySelectorAll('.calc-tab').forEach(tab => {
+  const tabs   = document.querySelectorAll('.calc-tab');
+  const panels = document.querySelectorAll('.calc-panel');
+
+  // Estat inicial net
+  tabs.forEach(t => t.classList.remove('active'));
+  panels.forEach(p => p.classList.remove('active'));
+  if (tabs[0])   tabs[0].classList.add('active');
+  if (panels[0]) panels[0].classList.add('active');
+
+  tabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      const panel = tab.dataset.panel;
-      document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
+      const panelId = tab.dataset.panel;
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
       tab.classList.add('active');
-      document.getElementById(panel).classList.add('active');
+      const target = document.getElementById(panelId);
+      if (target) target.classList.add('active');
     });
   });
 }
 
 // ---- CALCULADORA: funció principal ----
-function calcProjection(type, mode, year, startMonth, endMonth) {
-  const base = BASE_COSTS[type];
-  const seasonal = SEASONAL[type];
-  const factor = mode === 'annual' ? 1.0 : 1.0;
-  const inflation = 0.03; // +3% anual estimat
-  const yearAdj = Math.pow(1 + inflation, year - 2024);
+function calcProjection(type, mode, year, scenario = 'base') {
+  const base          = BASE_COSTS[type];
+  const seasonal      = SEASONAL[type];
+  const inflation     = 0.03;
+  const yearAdj       = Math.pow(1 + inflation, year - 2024);
+  const scenarioFact  = SCENARIO_FACTORS[scenario] ?? 1.0;
+
+  const indices = mode === 'annual'
+    ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    : [8, 9, 10, 11, 0, 1, 2, 3, 4, 5];   // set→jun
 
   let months = [];
-  let total = 0;
+  let total  = 0;
 
-  if (mode === 'annual') {
-    for (let i = 0; i < 12; i++) {
-      const val = base * seasonal[i] * yearAdj;
-      months.push({ label: MONTHS_CA[i], value: val });
-      total += val;
-    }
-  } else {
-    // Curs escolar: setembre (8) → juny (5)
-    const indices = [8, 9, 10, 11, 0, 1, 2, 3, 4, 5];
-    for (const i of indices) {
-      const val = base * seasonal[i] * yearAdj;
-      months.push({ label: MONTHS_CA[i], value: val });
-      total += val;
-    }
+  for (const i of indices) {
+    const val = base * seasonal[i] * yearAdj * scenarioFact;
+    months.push({ label: MONTHS_CA[i], value: val });
+    total += val;
   }
 
-  return { total, months, yearAdj, base };
+  return { total, months, yearAdj, scenarioFact };
 }
 
 // ---- CALCULADORA: renderitzar resultat ----
-function renderCalcResult(containerId, type, mode, year) {
+function renderCalcResult(containerId, type, mode, year, scenario) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const { total, months } = calcProjection(type, mode, year);
-  const modeLabel = mode === 'annual' ? `any ${year}` : `curs ${year}-${year+1}`;
+  const { total, months, scenarioFact } = calcProjection(type, mode, year, scenario);
+
+  const modeLabel = mode === 'annual'
+    ? `any ${year}`
+    : `curs ${year}-${year + 1}`;
 
   const typeLabels = {
     electric: 'Consum elèctric estimat',
-    water: 'Consum d\'aigua estimat',
-    office: 'Consumibles d\'oficina estimats',
+    water:    "Consum d'aigua estimat",
+    office:   "Consumibles d'oficina estimats",
     cleaning: 'Productes de neteja estimats',
   };
 
-  container.classList.add('show');
-  container.querySelector('.result-main').textContent = fmt(total) + ' €';
-  container.querySelector('.result-label').textContent = `${typeLabels[type]} per al ${modeLabel}`;
+  const scenarioColors = {
+    base:      'var(--c-text)',
+    opt:       'var(--c-green)',
+    pessimist: 'var(--c-red)',
+  };
 
+  container.classList.add('show');
+
+  container.querySelector('.result-main').textContent = fmt(total) + ' €';
+  container.querySelector('.result-label').innerHTML  =
+    `${typeLabels[type]} per al ${modeLabel} &nbsp;
+     <span style="font-size:0.8rem;color:${scenarioColors[scenario]};font-weight:600">
+       · Escenari ${SCENARIO_LABELS[scenario]}
+       (×${scenarioFact.toFixed(2)})
+     </span>`;
+
+  // Desglosament mensual
   const breakdown = container.querySelector('.result-breakdown');
   if (breakdown) {
     breakdown.innerHTML = months.map(m => `
@@ -189,41 +220,38 @@ function renderCalcResult(containerId, type, mode, year) {
     `).join('');
   }
 
-  // Gràfic de barres mensual
+  // Gràfic de barres
   const chartContainer = container.querySelector('.monthly-chart');
   if (chartContainer) {
     const maxVal = Math.max(...months.map(m => m.value));
-    chartContainer.innerHTML = months.map(m => `
-      <div class="bar-row">
-        <div class="bar-label">${m.label}</div>
-        <div class="bar-track">
-          <div class="bar-fill" style="width:0%; background:${getBarColor(type)}" data-target="${(m.value/maxVal*100).toFixed(1)}%"></div>
-            style="background:${getBarColor(type)}"></div>
-        </div>
-        <div class="bar-val">${fmtShort(m.value)} €</div>
-      </div>
-    `).join('');
+    const color  = getBarColor(type);
 
-    setTimeout(() => {
-      chartContainer.querySelectorAll('.bar-fill').forEach(el => {
-        el.style.width = el.dataset.target;
-        el.style.background = getBarColor(type);
-      });
-    }, 50);
+    chartContainer.innerHTML = months.map(m => {
+      const heightPct = ((m.value / maxVal) * 100).toFixed(1);
+      return `
+        <div class="bar-col">
+          <div class="bar" style="height:${heightPct}%;background:${color}"></div>
+          <div class="bar-lbl">${m.label}</div>
+        </div>
+      `;
+    }).join('');
   }
 }
 
 function getBarColor(type) {
-  return { electric: '#e8c16a', water: '#5ca8e8', office: '#3ecf74', cleaning: '#a8e85c' }[type] || '#3ecf74';
+  const colors = {
+    electric: 'linear-gradient(180deg,#e8c16a,rgba(232,193,106,0.25))',
+    water:    'linear-gradient(180deg,#5ca8e8,rgba(92,168,232,0.25))',
+    office:   'linear-gradient(180deg,#3ecf74,rgba(62,207,116,0.25))',
+    cleaning: 'linear-gradient(180deg,#a8e85c,rgba(168,232,92,0.25))',
+  };
+  return colors[type] || colors.office;
 }
 
 // ---- ACCORDION ----
 function initAccordions() {
   document.querySelectorAll('.accordion-header').forEach(header => {
-    header.addEventListener('click', () => {
-      const item = header.parentElement;
-      item.classList.toggle('open');
-    });
+    header.addEventListener('click', () => header.parentElement.classList.toggle('open'));
   });
 }
 
@@ -237,7 +265,6 @@ function initScrollAnimations() {
       }
     });
   }, { threshold: 0.1 });
-
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
 }
 
@@ -245,7 +272,6 @@ function initScrollAnimations() {
 function initNavScroll() {
   const sections = document.querySelectorAll('section[id]');
   const navLinks = document.querySelectorAll('nav a');
-
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -255,62 +281,35 @@ function initNavScroll() {
       }
     });
   }, { threshold: 0.4 });
-
   sections.forEach(s => obs.observe(s));
 }
 
 // ---- CALCULADORA HANDLERS ----
+// Cada binding: [btnId, yearSelId, scenarioSelId, resultId, type, mode]
 function bindCalculators() {
-  // 1. Electricitat anual
-  document.getElementById('btn-elec-annual')?.addEventListener('click', () => {
-    const year = parseInt(document.getElementById('sel-elec-annual-year').value);
-    renderCalcResult('res-elec-annual', 'electric', 'annual', year);
-  });
+  const bindings = [
+    ['btn-elec-annual',  'sel-elec-annual-year',  'sel-elec-annual-scenario',  'res-elec-annual',  'electric', 'annual'],
+    ['btn-elec-course',  'sel-elec-course-year',  'sel-elec-course-scenario',  'res-elec-course',  'electric', 'course'],
+    ['btn-water-annual', 'sel-water-annual-year', 'sel-water-annual-scenario', 'res-water-annual', 'water',    'annual'],
+    ['btn-water-course', 'sel-water-course-year', 'sel-water-course-scenario', 'res-water-course', 'water',    'course'],
+    ['btn-office-annual','sel-office-annual-year','sel-office-annual-scenario','res-office-annual','office',   'annual'],
+    ['btn-office-course','sel-office-course-year','sel-office-course-scenario','res-office-course','office',   'course'],
+    ['btn-clean-annual', 'sel-clean-annual-year', 'sel-clean-annual-scenario', 'res-clean-annual', 'cleaning', 'annual'],
+    ['btn-clean-course', 'sel-clean-course-year', 'sel-clean-course-scenario', 'res-clean-course', 'cleaning', 'course'],
+  ];
 
-  // 2. Electricitat curs
-  document.getElementById('btn-elec-course')?.addEventListener('click', () => {
-    const year = parseInt(document.getElementById('sel-elec-course-year').value);
-    renderCalcResult('res-elec-course', 'electric', 'course', year);
-  });
-
-  // 3. Aigua anual
-  document.getElementById('btn-water-annual')?.addEventListener('click', () => {
-    const year = parseInt(document.getElementById('sel-water-annual-year').value);
-    renderCalcResult('res-water-annual', 'water', 'annual', year);
-  });
-
-  // 4. Aigua curs
-  document.getElementById('btn-water-course')?.addEventListener('click', () => {
-    const year = parseInt(document.getElementById('sel-water-course-year').value);
-    renderCalcResult('res-water-course', 'water', 'course', year);
-  });
-
-  // 5. Oficina anual
-  document.getElementById('btn-office-annual')?.addEventListener('click', () => {
-    const year = parseInt(document.getElementById('sel-office-annual-year').value);
-    renderCalcResult('res-office-annual', 'office', 'annual', year);
-  });
-
-  // 6. Oficina curs
-  document.getElementById('btn-office-course')?.addEventListener('click', () => {
-    const year = parseInt(document.getElementById('sel-office-course-year').value);
-    renderCalcResult('res-office-course', 'office', 'course', year);
-  });
-
-  // 7. Neteja anual
-  document.getElementById('btn-clean-annual')?.addEventListener('click', () => {
-    const year = parseInt(document.getElementById('sel-clean-annual-year').value);
-    renderCalcResult('res-clean-annual', 'cleaning', 'annual', year);
-  });
-
-  // 8. Neteja curs
-  document.getElementById('btn-clean-course')?.addEventListener('click', () => {
-    const year = parseInt(document.getElementById('sel-clean-course-year').value);
-    renderCalcResult('res-clean-course', 'cleaning', 'course', year);
+  bindings.forEach(([btnId, yearSelId, scenarioSelId, resId, type, mode]) => {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const year     = parseInt(document.getElementById(yearSelId)?.value || '2025');
+      const scenario = document.getElementById(scenarioSelId)?.value || 'base';
+      renderCalcResult(resId, type, mode, year, scenario);
+    });
   });
 }
 
-// ---- PROGRESS BARS (reducció 30%) ----
+// ---- PROGRESS BARS ----
 function initProgressBars() {
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {
@@ -322,34 +321,31 @@ function initProgressBars() {
       }
     });
   }, { threshold: 0.3 });
-
   document.querySelectorAll('.progress-section').forEach(s => observer.observe(s));
 }
 
 // ---- CALCUL REDUCCIÓ AMB MILLORES ----
 function calcWithReductions() {
   const reductions = { electric: 0.30, water: 0.25, office: 0.20, cleaning: 0.20 };
-  const container = document.getElementById('reduction-results');
+  const container  = document.getElementById('reduction-results');
   if (!container) return;
 
-  let rows = '';
   const types = [
-    { key: 'electric', label: 'Consum Elèctric', icon: '⚡' },
-    { key: 'water', label: 'Consum Aigua', icon: '💧' },
-    { key: 'office', label: 'Consumibles Oficina', icon: '📄' },
-    { key: 'cleaning', label: 'Productes Neteja', icon: '🧹' },
+    { key: 'electric', label: 'Consum Elèctric',    icon: '⚡' },
+    { key: 'water',    label: 'Consum Aigua',        icon: '💧' },
+    { key: 'office',   label: 'Consumibles Oficina', icon: '📄' },
+    { key: 'cleaning', label: 'Productes Neteja',    icon: '🧹' },
   ];
 
   let totalBefore = 0, totalAfter = 0;
 
-  types.forEach(t => {
-    const { total: before } = calcProjection(t.key, 'annual', 2025);
-    const after = before * (1 - reductions[t.key]);
+  const rows = types.map(t => {
+    const { total: before } = calcProjection(t.key, 'annual', 2025, 'base');
+    const after  = before * (1 - reductions[t.key]);
     const saving = before - after;
     totalBefore += before;
-    totalAfter += after;
-
-    rows += `
+    totalAfter  += after;
+    return `
       <tr>
         <td>${t.icon} ${t.label}</td>
         <td style="text-align:right">${fmt(before)} €</td>
@@ -358,15 +354,15 @@ function calcWithReductions() {
         <td style="text-align:right"><span class="badge badge-green">−${(reductions[t.key]*100).toFixed(0)}%</span></td>
       </tr>
     `;
-  });
+  }).join('');
 
   const totalSaving = totalBefore - totalAfter;
-
   container.innerHTML = `
     <div style="overflow-x:auto">
       <table class="data-table">
         <thead><tr>
-          <th>Indicador</th><th style="text-align:right">Actual (2025)</th>
+          <th>Indicador</th>
+          <th style="text-align:right">Actual (2025)</th>
           <th style="text-align:right">Amb millores</th>
           <th style="text-align:right">Estalvi</th>
           <th style="text-align:right">Reducció</th>
@@ -378,7 +374,9 @@ function calcWithReductions() {
             <td style="text-align:right;padding:1rem">${fmt(totalBefore)} €</td>
             <td style="text-align:right;color:var(--c-green);padding:1rem">${fmt(totalAfter)} €</td>
             <td style="text-align:right;color:var(--c-gold);padding:1rem">−${fmt(totalSaving)} €</td>
-            <td style="text-align:right;padding:1rem"><span class="badge badge-green">−${((totalSaving/totalBefore)*100).toFixed(1)}%</span></td>
+            <td style="text-align:right;padding:1rem">
+              <span class="badge badge-green">−${((totalSaving/totalBefore)*100).toFixed(1)}%</span>
+            </td>
           </tr>
         </tfoot>
       </table>
@@ -388,20 +386,25 @@ function calcWithReductions() {
 
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', async () => {
-  // Envolvemos en try catch.
-  try { await loadData(); } catch(e) { console.error('Error loadData:', e); }
-  try { initTabs(); } catch(e) { console.error('Error initTabs:', e); }
-  try { initAccordions(); } catch(e) { console.error('Error initAccordions:', e); }
-  try { initScrollAnimations(); } catch(e) { console.error('Error initScrollAnimations:', e); }
-  try { initNavScroll(); } catch(e) { console.error('Error initNavScroll:', e); }
-  try { bindCalculators(); } catch(e) { console.error('Error bindCalculators:', e); } // ¡Esto reactiva tu calculadora!
-  try { initProgressBars(); } catch(e) { console.error('Error initProgressBars:', e); }
-  try { calcWithReductions(); } catch(e) { console.error('Error calcWithReductions:', e); }
+  try { await loadData();       } catch(e) { console.error('loadData:', e); }
+  try { initTabs();             } catch(e) { console.error('initTabs:', e); }
+  try { initAccordions();       } catch(e) { console.error('initAccordions:', e); }
+  try { initScrollAnimations(); } catch(e) { console.error('initScrollAnimations:', e); }
+  try { initNavScroll();        } catch(e) { console.error('initNavScroll:', e); }
+  try { bindCalculators();      } catch(e) { console.error('bindCalculators:', e); }
+  try { initProgressBars();     } catch(e) { console.error('initProgressBars:', e); }
+  try { calcWithReductions();   } catch(e) { console.error('calcWithReductions:', e); }
 
-  // Animar hero stats
   setTimeout(() => {
     document.querySelectorAll('.hero-stat .val').forEach(el => {
-      if(el) el.style.opacity = '1';
+      if (el) el.style.opacity = '1';
     });
   }, 500);
+
+  // Menú hamburguesa
+  const menuBtn  = document.querySelector('.nav-mobile-btn');
+  const navLinks = document.querySelector('.nav-links');
+  if (menuBtn && navLinks) {
+    menuBtn.addEventListener('click', () => navLinks.classList.toggle('show'));
+  }
 });
