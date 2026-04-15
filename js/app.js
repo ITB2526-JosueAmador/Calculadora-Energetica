@@ -39,7 +39,7 @@ const SCENARIO_LABELS = {
 // ---- CÀRREGA DADES ----
 async function loadData() {
   try {
-    const resp = await fetch('/data/dataclean.json');
+    const resp = await fetch('../data/dataclean.json');
     DATA = await resp.json();
     renderKPIs();
     renderCategoryChart();
