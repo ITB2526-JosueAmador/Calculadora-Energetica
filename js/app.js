@@ -498,46 +498,48 @@ function initYearSteppers() {
   const MAX_YEAR = currentYear + 50;
 
   document.querySelectorAll('.year-stepper').forEach(stepper => {
-    const inp     = stepper.querySelector('.stepper-input');
-    const btnDec  = stepper.querySelector('.stepper-dec');
-    const btnInc  = stepper.querySelector('.stepper-inc');
-    if (!inp) return;
+    const inp    = stepper.querySelector('.stepper-input');
+    const btnDec = stepper.querySelector('.stepper-dec');
+    const btnInc = stepper.querySelector('.stepper-inc');
+    if (!inp || !btnDec || !btnInc) return;
 
-    // Valor inicial: any vinent
     inp.value = currentYear + 1;
 
     const clamp = y => Math.min(MAX_YEAR, Math.max(MIN_YEAR, y));
 
-    btnDec.addEventListener('click', () => {
-      const y = clamp((parseInt(inp.value) || currentYear + 1) - 1);
+    const step = (delta) => {
+      const y = clamp((parseInt(inp.value) || currentYear + 1) + delta);
       inp.value = y;
-      inp.dispatchEvent(new Event('change'));
+      inp.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+
+    // pointerdown cobreix touch i mouse, i preventDefault evita
+    // que el focus passi a l'input (que causaria el teclat a mòbil)
+    const addTap = (btn, delta) => {
+      btn.addEventListener('pointerdown', e => {
+        e.preventDefault();
+        step(delta);
+      });
+    };
+
+    addTap(btnDec, -1);
+    addTap(btnInc, +1);
+
+    // Només permet dígits mentre s'escriu
+    inp.addEventListener('input', () => {
+      inp.value = inp.value.replace(/[^0-9]/g, '').slice(0, 4);
     });
 
-    btnInc.addEventListener('click', () => {
-      const y = clamp((parseInt(inp.value) || currentYear + 1) + 1);
-      inp.value = y;
-      inp.dispatchEvent(new Event('change'));
-    });
-
-    // Validació en escriure: accepta qualsevol dígit mentre s'escriu,
-    // però clampeja quan es perd el focus o es prem Enter
-    inp.addEventListener('keydown', e => {
-      if (e.key === 'Enter') { inp.blur(); }
-    });
-
-    inp.addEventListener('blur', () => {
+    // Valida i clampeja en perdre el focus o prémer Enter
+    const commit = () => {
       const y = parseInt(inp.value);
       if (!isNaN(y)) {
         inp.value = clamp(y);
-        inp.dispatchEvent(new Event('change'));
+        inp.dispatchEvent(new Event('change', { bubbles: true }));
       }
-    });
-
-    // Només permet dígits
-    inp.addEventListener('input', () => {
-      inp.value = inp.value.replace(/[^0-9]/g, '');
-    });
+    };
+    inp.addEventListener('blur', commit);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') inp.blur(); });
   });
 }
 

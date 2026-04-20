@@ -262,7 +262,8 @@ nav a.active {
   margin-bottom: 0.5rem;
 }
 
-select, input {
+select,
+input:not(.stepper-input) {
   width: 100%;
   background: var(--c-bg);
   border: 1px solid var(--c-border);
@@ -274,7 +275,8 @@ select, input {
   transition: border 0.2s;
 }
 
-select:focus, input:focus {
+select:focus,
+input:not(.stepper-input):focus {
   border-color: var(--c-green);
   box-shadow: 0 0 0 2px var(--c-green-dim);
 }
@@ -686,33 +688,57 @@ footer {
 /* ---- YEAR STEPPER ---- */
 .year-stepper {
   display: flex;
-  align-items: center;
-  gap: 0;
+  align-items: stretch;
   width: 100%;
   border: 1px solid var(--c-border);
   border-radius: 8px;
-  overflow: hidden;
   background: var(--c-bg);
+  position: relative;
+  z-index: 1;
+  overflow: visible;
 }
 
 .stepper-btn {
-  flex: 0 0 2.75rem;
-  height: 2.75rem;
-  background: rgba(255,255,255,0.05);
+  flex: 0 0 3rem;
+  min-height: 3rem;
+  background: rgba(255,255,255,0.06);
   border: none;
   color: var(--c-gold);
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s;
   user-select: none;
-  -webkit-tap-highlight-color: transparent;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
   touch-action: manipulation;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  /* Ampliem l'àrea tàctil sense canviar la visual */
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-.stepper-btn:hover,
+.stepper-btn:first-child {
+  border-radius: 7px 0 0 7px;
+  border-right: 1px solid var(--c-border);
+}
+
+.stepper-btn:last-child {
+  border-radius: 0 7px 7px 0;
+  border-left: 1px solid var(--c-border);
+}
+
 .stepper-btn:active {
-  background: rgba(232,193,106,0.15);
+  background: rgba(232,193,106,0.2);
+}
+
+@media (hover: hover) {
+  .stepper-btn:hover {
+    background: rgba(232,193,106,0.12);
+  }
 }
 
 .stepper-input {
@@ -720,17 +746,27 @@ footer {
   text-align: center;
   background: transparent;
   border: none;
-  border-left: 1px solid var(--c-border);
-  border-right: 1px solid var(--c-border);
-  color: var(--c-text);
+  color: var(--c-white);
   font-size: 1rem;
   font-weight: 600;
-  padding: 0.5rem 0.25rem;
+  padding: 0.65rem 0.25rem;
   outline: none;
   min-width: 0;
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  /* Evita que el reset global sobreescrigui */
+  box-shadow: none !important;
+  border-radius: 0 !important;
 }
 
 .stepper-input::placeholder {
   color: var(--c-muted);
   font-weight: 400;
+}
+
+.stepper-input:focus {
+  background: rgba(255,255,255,0.03);
+  box-shadow: none !important;
+  border-color: transparent !important;
 }
