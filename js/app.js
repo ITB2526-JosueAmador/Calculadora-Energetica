@@ -491,6 +491,56 @@ function populateScenarioSelects() {
   });
 }
 
+// ---- YEAR STEPPER LOGIC ----
+function initYearSteppers() {
+  const currentYear = new Date().getFullYear();
+  const MIN_YEAR = currentYear;
+  const MAX_YEAR = currentYear + 50;
+
+  document.querySelectorAll('.year-stepper').forEach(stepper => {
+    const inp     = stepper.querySelector('.stepper-input');
+    const btnDec  = stepper.querySelector('.stepper-dec');
+    const btnInc  = stepper.querySelector('.stepper-inc');
+    if (!inp) return;
+
+    // Valor inicial: any vinent
+    inp.value = currentYear + 1;
+
+    const clamp = y => Math.min(MAX_YEAR, Math.max(MIN_YEAR, y));
+
+    btnDec.addEventListener('click', () => {
+      const y = clamp((parseInt(inp.value) || currentYear + 1) - 1);
+      inp.value = y;
+      inp.dispatchEvent(new Event('change'));
+    });
+
+    btnInc.addEventListener('click', () => {
+      const y = clamp((parseInt(inp.value) || currentYear + 1) + 1);
+      inp.value = y;
+      inp.dispatchEvent(new Event('change'));
+    });
+
+    // Validació en escriure: accepta qualsevol dígit mentre s'escriu,
+    // però clampeja quan es perd el focus o es prem Enter
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { inp.blur(); }
+    });
+
+    inp.addEventListener('blur', () => {
+      const y = parseInt(inp.value);
+      if (!isNaN(y)) {
+        inp.value = clamp(y);
+        inp.dispatchEvent(new Event('change'));
+      }
+    });
+
+    // Només permet dígits
+    inp.addEventListener('input', () => {
+      inp.value = inp.value.replace(/[^0-9]/g, '');
+    });
+  });
+}
+
 // ---- CALCULADORA HANDLERS ----
 // Cada binding: [yearInputId, scenarioSelId, resultId, type, mode]
 function bindCalculators() {
@@ -512,25 +562,18 @@ function bindCalculators() {
     const scenarioSel = document.getElementById(scenarioSelId);
     if (!yearInp || !scenarioSel) return;
 
-    // Valor per defecte: any vinent
-    yearInp.value = currentYear + 1;
-    yearInp.min   = currentYear;
-    yearInp.max   = currentYear + 50;
-
     const doCalc = () => {
-      let year = parseInt(yearInp.value);
-      if (isNaN(year) || year < currentYear) { year = currentYear; yearInp.value = year; }
-      if (year > currentYear + 50)           { year = currentYear + 50; yearInp.value = year; }
+      const y = parseInt(yearInp.value);
+      if (isNaN(y) || y < currentYear || y > currentYear + 50) return;
       const scenario = scenarioSel.value || 'base';
-      renderCalcResult(resId, type, mode, year, scenario);
+      renderCalcResult(resId, type, mode, y, scenario);
     };
 
-    yearInp.addEventListener('input', doCalc);
     yearInp.addEventListener('change', doCalc);
     scenarioSel.addEventListener('change', doCalc);
 
-    // Càlcul inicial automàtic
-    doCalc();
+    // Càlcul inicial automàtic (després que initYearSteppers hagi posat el valor)
+    setTimeout(doCalc, 0);
   });
 }
 
@@ -617,7 +660,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { initScrollAnimations(); } catch(e) { console.error('initScrollAnimations:', e); }
   try { initNavScroll();        } catch(e) { console.error('initNavScroll:', e); }
   try { populateScenarioSelects(); } catch(e) { console.error('populateScenarioSelects:', e); }
-  try { bindCalculators();      } catch(e) { console.error('bindCalculators:', e); }
+  try { initYearSteppers();        } catch(e) { console.error('initYearSteppers:', e); }
+  try { bindCalculators();         } catch(e) { console.error('bindCalculators:', e); }
   try { initProgressBars();     } catch(e) { console.error('initProgressBars:', e); }
   try { calcWithReductions();   } catch(e) { console.error('calcWithReductions:', e); }
 

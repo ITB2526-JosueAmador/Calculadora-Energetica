@@ -59,7 +59,11 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any de projecció</label>
-            <input type="number" id="inp-elec-annual-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
+            <div class="year-stepper" id="stepper-inp-elec-annual-year">
+                <button type="button" class="stepper-btn stepper-dec" data-target="inp-elec-annual-year">−</button>
+                <input type="text" inputmode="numeric" id="inp-elec-annual-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <button type="button" class="stepper-btn stepper-inc" data-target="inp-elec-annual-year">+</button>
+              </div>
           </div>
           <div class="form-group">
             <label>Escenari</label>
@@ -93,7 +97,11 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any d'inici del curs</label>
-            <input type="number" id="inp-elec-course-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
+            <div class="year-stepper" id="stepper-inp-elec-course-year">
+                <button type="button" class="stepper-btn stepper-dec" data-target="inp-elec-course-year">−</button>
+                <input type="text" inputmode="numeric" id="inp-elec-course-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <button type="button" class="stepper-btn stepper-inc" data-target="inp-elec-course-year">+</button>
+              </div>
           </div>
           <div class="form-group">
             <label>Escenari</label>
@@ -127,7 +135,11 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any de projecció</label>
-            <input type="number" id="inp-water-annual-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
+            <div class="year-stepper" id="stepper-inp-water-annual-year">
+                <button type="button" class="stepper-btn stepper-dec" data-target="inp-water-annual-year">−</button>
+                <input type="text" inputmode="numeric" id="inp-water-annual-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <button type="button" class="stepper-btn stepper-inc" data-target="inp-water-annual-year">+</button>
+              </div>
           </div>
           <div class="form-group">
             <label>Escenari</label>
@@ -161,7 +173,11 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any d'inici del curs</label>
-            <input type="number" id="inp-water-course-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
+            <div class="year-stepper" id="stepper-inp-water-course-year">
+                <button type="button" class="stepper-btn stepper-dec" data-target="inp-water-course-year">−</button>
+                <input type="text" inputmode="numeric" id="inp-water-course-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <button type="button" class="stepper-btn stepper-inc" data-target="inp-water-course-year">+</button>
+              </div>
           </div>
           <div class="form-group">
             <label>Escenari</label>
@@ -195,7 +211,11 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any de projecció</label>
-            <input type="number" id="inp-office-annual-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
+            <div class="year-stepper" id="stepper-inp-office-annual-year">
+                <button type="button" class="stepper-btn stepper-dec" data-target="inp-office-annual-year">−</button>
+                <input type="text" inputmode="numeric" id="inp-office-annual-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <button type="button" class="stepper-btn stepper-inc" data-target="inp-office-annual-year">+</button>
+              </div>
           </div>
           <div class="form-group">
             <label>Escenari</label>
@@ -229,7 +249,11 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any d'inici del curs</label>
-            <input type="number" id="inp-office-course-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
+            <div class="year-stepper" id="stepper-inp-office-course-year">
+                <button type="button" class="stepper-btn stepper-dec" data-target="inp-office-course-year">−</button>
+                <input type="text" inputmode="numeric" id="inp-office-course-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <button type="button" class="stepper-btn stepper-inc" data-target="inp-office-course-year">+</button>
+              </div>
           </div>
           <div class="form-group">
             <label>Escenari</label>
@@ -263,7 +287,11 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any de projecció</label>
-            <input type="number" id="inp-clean-annual-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
+            <div class="year-stepper" id="stepper-inp-clean-annual-year">
+                <button type="button" class="stepper-btn stepper-dec" data-target="inp-clean-annual-year">−</button>
+                <input type="text" inputmode="numeric" id="inp-clean-annual-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <button type="button" class="stepper-btn stepper-inc" data-target="inp-clean-annual-year">+</button>
+              </div>
           </div>
           <div class="form-group">
             <label>Escenari</label>
@@ -297,7 +325,11 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any d'inici del curs</label>
-            <input type="number" id="inp-clean-course-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
+            <div class="year-stepper" id="stepper-inp-clean-course-year">
+                <button type="button" class="stepper-btn stepper-dec" data-target="inp-clean-course-year">−</button>
+                <input type="text" inputmode="numeric" id="inp-clean-course-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <button type="button" class="stepper-btn stepper-inc" data-target="inp-clean-course-year">+</button>
+              </div>
           </div>
           <div class="form-group">
             <label>Escenari</label>
