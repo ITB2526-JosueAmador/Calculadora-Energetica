@@ -59,22 +59,16 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any de projecció</label>
-            <select id="sel-elec-annual-year">
-              <option value="2025">2025</option>
-              <option value="2026">2026</option>
-              <option value="2027" selected>2027</option>
-            </select>
+            <input type="number" id="inp-elec-annual-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
           </div>
           <div class="form-group">
             <label>Escenari</label>
             <select id="sel-elec-annual-scenario">
               <option value="base">Base (tendència actual)</option>
-              <option value="opt">Optimista (millores energètiques)</option>
-              <option value="pessimist">Pessimista (sense millores)</option>
             </select>
           </div>
         </div>
-        <button class="btn-calc" id="btn-elec-annual">Calcular projecció →</button>
+
         <div class="calc-result" id="res-elec-annual">
           <div class="result-main"></div>
           <div class="result-label"></div>
@@ -99,22 +93,16 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any d'inici del curs</label>
-            <select id="sel-elec-course-year">
-              <option value="2025">Curs 2025-2026</option>
-              <option value="2026">Curs 2026-2027</option>
-              <option value="2027">Curs 2027-2028</option>
-            </select>
+            <input type="number" id="inp-elec-course-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
           </div>
           <div class="form-group">
             <label>Escenari</label>
             <select id="sel-elec-course-scenario">
               <option value="base">Base (tendència actual)</option>
-              <option value="opt">Optimista (millores energètiques)</option>
-              <option value="pessimist">Pessimista (sense millores)</option>
             </select>
           </div>
         </div>
-        <button class="btn-calc" id="btn-elec-course">Calcular projecció →</button>
+
         <div class="calc-result" id="res-elec-course">
           <div class="result-main"></div>
           <div class="result-label"></div>
@@ -139,22 +127,16 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any de projecció</label>
-            <select id="sel-water-annual-year">
-              <option value="2025">2025</option>
-              <option value="2026">2026</option>
-              <option value="2027">2027</option>
-            </select>
+            <input type="number" id="inp-water-annual-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
           </div>
           <div class="form-group">
             <label>Escenari</label>
             <select id="sel-water-annual-scenario">
               <option value="base">Base (tendència actual)</option>
-              <option value="opt">Optimista (reg eficient)</option>
-              <option value="pessimist">Pessimista (sense millores)</option>
             </select>
           </div>
         </div>
-        <button class="btn-calc" id="btn-water-annual">Calcular projecció →</button>
+
         <div class="calc-result" id="res-water-annual">
           <div class="result-main"></div>
           <div class="result-label"></div>
@@ -179,22 +161,16 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any d'inici del curs</label>
-            <select id="sel-water-course-year">
-              <option value="2025">Curs 2025-2026</option>
-              <option value="2026">Curs 2026-2027</option>
-              <option value="2027">Curs 2027-2028</option>
-            </select>
+            <input type="number" id="inp-water-course-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
           </div>
           <div class="form-group">
             <label>Escenari</label>
             <select id="sel-water-course-scenario">
               <option value="base">Base (tendència actual)</option>
-              <option value="opt">Optimista (reg eficient)</option>
-              <option value="pessimist">Pessimista (sense millores)</option>
             </select>
           </div>
         </div>
-        <button class="btn-calc" id="btn-water-course">Calcular projecció →</button>
+
         <div class="calc-result" id="res-water-course">
           <div class="result-main"></div>
           <div class="result-label"></div>
@@ -219,22 +195,16 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any de projecció</label>
-            <select id="sel-office-annual-year">
-              <option value="2025">2025</option>
-              <option value="2026">2026</option>
-              <option value="2027">2027</option>
-            </select>
+            <input type="number" id="inp-office-annual-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
           </div>
           <div class="form-group">
             <label>Escenari</label>
             <select id="sel-office-annual-scenario">
               <option value="base">Base (tendència actual)</option>
-              <option value="opt">Optimista (digitalització)</option>
-              <option value="pessimist">Pessimista (sense canvis)</option>
             </select>
           </div>
         </div>
-        <button class="btn-calc" id="btn-office-annual">Calcular projecció →</button>
+
         <div class="calc-result" id="res-office-annual">
           <div class="result-main"></div>
           <div class="result-label"></div>
@@ -259,22 +229,16 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any d'inici del curs</label>
-            <select id="sel-office-course-year">
-              <option value="2025">Curs 2025-2026</option>
-              <option value="2026">Curs 2026-2027</option>
-              <option value="2027">Curs 2027-2028</option>
-            </select>
+            <input type="number" id="inp-office-course-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
           </div>
           <div class="form-group">
             <label>Escenari</label>
             <select id="sel-office-course-scenario">
               <option value="base">Base (tendència actual)</option>
-              <option value="opt">Optimista (digitalització)</option>
-              <option value="pessimist">Pessimista (sense canvis)</option>
             </select>
           </div>
         </div>
-        <button class="btn-calc" id="btn-office-course">Calcular projecció →</button>
+
         <div class="calc-result" id="res-office-course">
           <div class="result-main"></div>
           <div class="result-label"></div>
@@ -299,22 +263,16 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any de projecció</label>
-            <select id="sel-clean-annual-year">
-              <option value="2025">2025</option>
-              <option value="2026">2026</option>
-              <option value="2027">2027</option>
-            </select>
+            <input type="number" id="inp-clean-annual-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
           </div>
           <div class="form-group">
             <label>Escenari</label>
             <select id="sel-clean-annual-scenario">
               <option value="base">Base (tendència actual)</option>
-              <option value="opt">Optimista (productes ecològics)</option>
-              <option value="pessimist">Pessimista (sense canvis)</option>
             </select>
           </div>
         </div>
-        <button class="btn-calc" id="btn-clean-annual">Calcular projecció →</button>
+
         <div class="calc-result" id="res-clean-annual">
           <div class="result-main"></div>
           <div class="result-label"></div>
@@ -339,22 +297,16 @@
         <div class="calc-form">
           <div class="form-group">
             <label>Any d'inici del curs</label>
-            <select id="sel-clean-course-year">
-              <option value="2025">Curs 2025-2026</option>
-              <option value="2026">Curs 2026-2027</option>
-              <option value="2027">Curs 2027-2028</option>
-            </select>
+            <input type="number" id="inp-clean-course-year" style="width:100%;padding:0.6rem 0.75rem;background:var(--c-bg);border:1px solid var(--c-border);border-radius:8px;color:var(--c-text);font-size:0.9rem" placeholder="p.ex. 2026" />
           </div>
           <div class="form-group">
             <label>Escenari</label>
             <select id="sel-clean-course-scenario">
               <option value="base">Base (tendència actual)</option>
-              <option value="opt">Optimista (productes ecològics)</option>
-              <option value="pessimist">Pessimista (sense canvis)</option>
             </select>
           </div>
         </div>
-        <button class="btn-calc" id="btn-clean-course">Calcular projecció →</button>
+
         <div class="calc-result" id="res-clean-course">
           <div class="result-main"></div>
           <div class="result-label"></div>

@@ -22,18 +22,128 @@ const BASE_COSTS = {
 };
 
 // Factor multiplicador per escenari
-// opt = millores aplicades (estalvi ~15-25%)
-// pessimist = sense millores + increment extra (~10-15%)
+// base = tendència actual sense canvis
+// opt_X = escenaris optimistes amb millores específiques
+// pessimist_X = escenaris pessimistes amb degradació específica
 const SCENARIO_FACTORS = {
-  base:      1.00,
-  opt:       0.82,   // −18%: millores energètiques / digitalització / eco
-  pessimist: 1.12,   // +12%: sense cap millora + increment addicional
+  base:           1.00,
+  all_opt:        0.72,  // millor cas global: totes les millores aplicades
+  all_pes:        1.22,  // pitjor cas global: totes les degradacions combinades
+
+  // ─── ELECTRICITAT ───────────────────────────────────────────────
+  elec_opt_solar:   0.68,   // −32%: instal·lació de panells fotovoltaics al terrat
+  elec_opt_led:     0.80,   // −20%: substitució total per LEDs i sensors de presència
+  elec_opt_smart:   0.85,   // −15%: gestió intel·ligent de consum i programació horària
+  elec_opt_cert:    0.90,   // −10%: certificació energètica A+ i auditoria de consums
+
+  elec_pes_avaria:  1.20,   // +20%: avaria de compressors amb sistemes ineficients de substitució
+  elec_pes_vell:    1.12,   // +12%: envelliment de la instal·lació sense manteniment preventiu
+  elec_pes_tarifa:  1.08,   // +8%: increment de la tarifa elèctrica per sobre de la inflació prevista
+  elec_pes_perd:    1.15,   // +15%: pèrdua del contracte tarifari avantatjós actual
+
+  // ─── AIGUA ──────────────────────────────────────────────────────
+  water_opt_grises:  0.70,  // −30%: sistema de recuperació i reutilització d'aigües grises
+  water_opt_sensors: 0.82,  // −18%: sensors de fuites i tancament automàtic de circuits
+  water_opt_reg:     0.88,  // −12%: reg per degoteig intel·ligent amb sonda d'humitat
+  water_opt_cistern: 0.93,  // −7%: cisternes de doble descàrrega i airejadors en aixetes
+
+  water_pes_sequera: 1.18,  // +18%: sequera + restriccions que disparen el cost per m³
+  water_pes_canon:   1.10,  // +10%: increment del cànon de l'aigua per la Generalitat
+  water_pes_fuites:  1.22,  // +22%: canonades deteriorades amb fuites no detectades
+  water_pes_ocup:    1.14,  // +14%: augment significatiu de l'ocupació del centre sense millores
+
+  // ─── OFICINA ────────────────────────────────────────────────────
+  office_opt_digi:   0.72,  // −28%: digitalització total d'expedients i gestió documental
+  office_opt_dcara:  0.83,  // −17%: impressió a doble cara obligatòria i paperless per defecte
+  office_opt_reuti:  0.88,  // −12%: programa de reutilització i compra de material reciclat
+  office_opt_audt:   0.93,  // −7%: auditoria de consums i control d'estoc centralitzat
+
+  office_pes_creix:  1.15,  // +15%: creixement de matrícula sense adaptació digital dels processos
+  office_pes_impr:   1.08,  // +8%: deteriorament d'impressores amb consum excessiu de tòner
+  office_pes_urgn:   1.12,  // +12%: compres urgents a proveïdors sense acord marc (+cost unitari)
+  office_pes_cost:   1.09,  // +9%: increment general del cost de paper i material d'oficina
+
+  // ─── NETEJA ─────────────────────────────────────────────────────
+  clean_opt_ecol:    0.78,  // −22%: productes ecològics concentrats amb menor dosi per ús
+  clean_opt_maqui:   0.84,  // −16%: maquinària d'alta eficiència (fregadores automàtiques)
+  clean_opt_freq:    0.90,  // −10%: reducció de freqüència amb millor efectivitat per producte
+  clean_opt_audt:    0.94,  // −6%: auditoria de processos de neteja i optimització de circuits
+
+  clean_pes_norm:    1.16,  // +16%: nova normativa sanitària amb protocols de desinfecció addicionals
+  clean_pes_desin:   1.10,  // +10%: necessitat de productes virucides i bactericides d'alt cost
+  clean_pes_superf:  1.13,  // +13%: ampliació de la superfície neta sense increment de pressupost
+  clean_pes_rotat:   1.08,  // +8%: alta rotació de personal que incrementa el consum per falta de formació
+};
+
+// Metadades dels escenaris: etiqueta, tipus, factor i descripció
+const SCENARIO_META = {
+  base: { label: 'Base (tendència actual)', group: 'base', factor: 1.00,
+    desc: 'Projecció sense canvis significatius, seguint la tendència actual de consums.' },
+
+  all_opt: { label: '🌟 Tot optimista (totes les millores)', group: 'opt', factor: 0.72,
+    desc: "Escenari global on s'apliquen totes les millores possibles simultàniament: energètiques, hídrica, digitalització i neteja ecològica. Màxim estalvi assolible." },
+  all_pes: { label: '💀 Tot pessimista (pitjor cas possible)', group: 'pessimist', factor: 1.22,
+    desc: "Escenari global que combina totes les degradacions alhora: avaries, encariment de subministraments, normatives restrictives i creixement no gestionat. Màxim cost possible." },
+
+  elec_opt_solar:  { label: '☀️ Panells fotovoltaics',        group: 'opt', factor: 0.68, desc: 'Instal·lació de panells solars al terrat del centre. Estalvi estimat del 32% en la factura elèctrica anual.' },
+  elec_opt_led:    { label: '💡 LED + sensors de presència',  group: 'opt', factor: 0.80, desc: 'Substitució de tota la il·luminació per tecnologia LED i instal·lació de sensors de presència a aules i passadissos.' },
+  elec_opt_smart:  { label: '🔌 Gestió intel·ligent',         group: 'opt', factor: 0.85, desc: 'Sistema de gestió energètica intel·ligent amb programació horària i monitoratge en temps real del consum.' },
+  elec_opt_cert:   { label: '🏷️ Certificació energètica A+',  group: 'opt', factor: 0.90, desc: 'Auditoria energètica completa i obtenció de la certificació A+, amb mesures de millora en aïllament i climatització.' },
+
+  elec_pes_avaria: { label: '⚠️ Avaria de compressors',       group: 'pessimist', factor: 1.20, desc: 'Avaria dels sistemes de climatització principals amb ús de equips de substitució molt menys eficients.' },
+  elec_pes_vell:   { label: '🔧 Instal·lació deteriorada',    group: 'pessimist', factor: 1.12, desc: 'Envelliment progressiu de la instal·lació sense manteniment preventiu, amb pèrdues per resistència i sobrecàlrregues.' },
+  elec_pes_tarifa: { label: '📈 Increment de tarifa',         group: 'pessimist', factor: 1.08, desc: 'Pujada de la tarifa elèctrica per sobre de la inflació prevista, sense possibilitat de negociar millors condicions.' },
+  elec_pes_perd:   { label: '📉 Pèrdua de contracte TUR',     group: 'pessimist', factor: 1.15, desc: "Pèrdua del contracte tarifari avantatjós actual i necessitat d'accedir al mercat lliure a un preu superior." },
+
+  water_opt_grises:  { label: '♻️ Recuperació aigües grises',  group: 'opt', factor: 0.70, desc: 'Sistema de recollida i reutilització de les aigües grises dels lavabos per al reg i cisternes dels vàters.' },
+  water_opt_sensors: { label: '🔍 Sensors de fuites',          group: 'opt', factor: 0.82, desc: 'Xarxa de sensors intel·ligents per a la detecció precoç de fuites i el tancament automàtic de circuits.' },
+  water_opt_reg:     { label: '🌱 Reg per degoteig',           group: 'opt', factor: 0.88, desc: 'Substitució del reg per aspersió per sistemes de degoteig amb sonda de humitat i programació meteorològica.' },
+  water_opt_cistern: { label: '🚿 Cisternes i airejadors',     group: 'opt', factor: 0.93, desc: 'Instal·lació de cisternes de doble descàrrega (3/6 L) i airejadors a totes les aixetes i dutxes del centre.' },
+
+  water_pes_sequera: { label: '🏜️ Sequera + restriccions',    group: 'pessimist', factor: 1.18, desc: 'Episodi de sequera severa amb restriccions oficials que disparen el preu del m³ i obliguen a mesures de proveïment alternatiu.' },
+  water_pes_canon:   { label: '💸 Increment del cànon',        group: 'pessimist', factor: 1.10, desc: "Increment del cànon de l'aigua i les taxes de sanejament per sobre del previst en els pressupostos del centre." },
+  water_pes_fuites:  { label: '🔩 Fuites en canonades',        group: 'pessimist', factor: 1.22, desc: 'Fuites no detectades en canonades antigues que incrementen el consum real molt per sobre del registrat als comptadors.' },
+  water_pes_ocup:    { label: '👥 Creixement d\'ocupació',     group: 'pessimist', factor: 1.14, desc: "Augment significatiu de l'alumnat i personal sense adaptar les instal·lacions hidràuliques a la nova demanda." },
+
+  office_opt_digi:   { label: '📱 Digitalització total',        group: 'opt', factor: 0.72, desc: 'Migració completa de tots els expedients i processos administratius a plataformes digitals, eliminant el paper en un 90%.' },
+  office_opt_dcara:  { label: '📋 Impressió doble cara',        group: 'opt', factor: 0.83, desc: "Política d'impressió a doble cara com a opció per defecte i cultura paperless amb validació de documents en pantalla." },
+  office_opt_reuti:  { label: '♻️ Material reciclat',           group: 'opt', factor: 0.88, desc: "Programa de reutilització de material d'oficina i preferència per la compra de productes amb contingut reciclat certificat." },
+  office_opt_audt:   { label: '📊 Auditoria i control',         group: 'opt', factor: 0.93, desc: "Auditoria de consums, control d'estoc centralitzat i licitació conjunta amb altres centres per reduir el cost unitari." },
+
+  office_pes_creix:  { label: '📚 Creixement sense digitalitzar', group: 'pessimist', factor: 1.15, desc: "Increment de l'alumnat i de la burocràcia administrativa sense aprofitar les eines digitals disponibles." },
+  office_pes_impr:   { label: '🖨️ Avaries d\'impressores',    group: 'pessimist', factor: 1.08, desc: "Deteriorament de les impressores amb consum excessiu de tòner, paper d'altes gramatures i freqüents atascos." },
+  office_pes_urgn:   { label: '🚨 Compres urgents fora d\'acord', group: 'pessimist', factor: 1.12, desc: "Trencament de l'estoc que obliga a compres urgents a proveïdors no homologats a preus molt superiors al contracte marc." },
+  office_pes_cost:   { label: '💰 Increment cost de paper',    group: 'pessimist', factor: 1.09, desc: 'Increment general del cost de les matèries primeres (cel·lulosa, plàstics) que encareix el material d\'oficina.' },
+
+  clean_opt_ecol:    { label: '🌿 Productes ecològics concentrats', group: 'opt', factor: 0.78, desc: 'Substitució per productes ecològics d\'alta concentració que requereixen menor quantitat per ús i redueixen l\'impacte ambiental.' },
+  clean_opt_maqui:   { label: '🤖 Maquinària d\'alta eficiència',  group: 'opt', factor: 0.84, desc: 'Inversió en fregadores automàtiques i aspiradores industrials eficients que redueixen el consum de productes i el temps de neteja.' },
+  clean_opt_freq:    { label: '📅 Optimització de freqüència',     group: 'opt', factor: 0.90, desc: "Revisió dels circuits de neteja per optimitzar la freqüència d'intervenció sense perdre la qualitat higiènica del centre." },
+  clean_opt_audt:    { label: '🔬 Auditoria de processos',         group: 'opt', factor: 0.94, desc: 'Auditoria completa dels processos de neteja per identificar duplicitats, ineficiències i zones de millora en el pla de treball.' },
+
+  clean_pes_norm:    { label: '📜 Nova normativa sanitària',       group: 'pessimist', factor: 1.16, desc: 'Aprovació de nova normativa sanitària que exigeix protocols de desinfecció més freqüents amb productes homologats específics.' },
+  clean_pes_desin:   { label: '🧪 Productes virucides obligatoris', group: 'pessimist', factor: 1.10, desc: "Obligació d'incorporar productes virucides i bactericides d'alt cost als protocols habituals de neteja." },
+  clean_pes_superf:  { label: '🏗️ Ampliació de superfície',       group: 'pessimist', factor: 1.13, desc: "Incorporació de noves aules o espais al centre sense increment proporcional del pressupost de neteja." },
+  clean_pes_rotat:   { label: '👷 Alta rotació de personal',       group: 'pessimist', factor: 1.08, desc: "Alta rotació del personal de neteja que incrementa el consum per la manca de formació en els protocols d'estalvi del centre." },
 };
 
 const SCENARIO_LABELS = {
   base:      'Base',
-  opt:       'Optimista',
-  pessimist: 'Pessimista',
+};
+// Afegim etiquetes dinàmicament
+Object.entries(SCENARIO_META).forEach(([k, v]) => {
+  SCENARIO_LABELS[k] = v.label;
+});
+
+// Mapa: per a cada selector de cada panell, quins escenaris mostrar
+const SCENARIO_GROUPS = {
+  electric: ['elec_opt_solar','elec_opt_led','elec_opt_smart','elec_opt_cert',
+             'elec_pes_avaria','elec_pes_vell','elec_pes_tarifa','elec_pes_perd'],
+  water:    ['water_opt_grises','water_opt_sensors','water_opt_reg','water_opt_cistern',
+             'water_pes_sequera','water_pes_canon','water_pes_fuites','water_pes_ocup'],
+  office:   ['office_opt_digi','office_opt_dcara','office_opt_reuti','office_opt_audt',
+             'office_pes_creix','office_pes_impr','office_pes_urgn','office_pes_cost'],
+  cleaning: ['clean_opt_ecol','clean_opt_maqui','clean_opt_freq','clean_opt_audt',
+             'clean_pes_norm','clean_pes_desin','clean_pes_superf','clean_pes_rotat'],
 };
 
 // ---- CÀRREGA DADES ----
@@ -157,7 +267,7 @@ function calcProjection(type, mode, year, scenario = 'base') {
   const seasonal      = SEASONAL[type];
   const inflation     = 0.03;
   const yearAdj       = Math.pow(1 + inflation, year - 2024);
-  const scenarioFact  = SCENARIO_FACTORS[scenario] ?? 1.0;
+  const scenarioFact  = SCENARIO_FACTORS[scenario] ?? SCENARIO_META[scenario]?.factor ?? 1.0;
 
   const indices = mode === 'annual'
     ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
@@ -193,21 +303,26 @@ function renderCalcResult(containerId, type, mode, year, scenario) {
     cleaning: 'Productes de neteja estimats',
   };
 
+  const scenarioMeta = SCENARIO_META[scenario] || { label: 'Base', group: 'base', desc: 'Projecció sense canvis.', factor: 1.0 };
+  const scenarioGroup = scenarioMeta.group;
+
   const scenarioColors = {
     base:      'var(--c-text)',
     opt:       'var(--c-green)',
     pessimist: 'var(--c-red)',
   };
+  const scColor = scenarioColors[scenarioGroup] || 'var(--c-text)';
 
   container.classList.add('show');
 
   container.querySelector('.result-main').textContent = fmt(total) + ' €';
   container.querySelector('.result-label').innerHTML  =
     `${typeLabels[type]} per al ${modeLabel} &nbsp;
-     <span style="font-size:0.8rem;color:${scenarioColors[scenario]};font-weight:600">
-       · Escenari ${SCENARIO_LABELS[scenario]}
+     <span style="font-size:0.8rem;color:${scColor};font-weight:600">
+       · ${scenarioMeta.label}
        (×${scenarioFact.toFixed(2)})
-     </span>`;
+     </span>
+     <div style="margin-top:0.5rem;font-size:0.78rem;color:var(--c-muted);font-style:italic">${scenarioMeta.desc}</div>`;
 
   // Desglosament mensual
   const breakdown = container.querySelector('.result-breakdown');
@@ -319,28 +434,103 @@ function initNavScroll() {
   sections.forEach(s => obs.observe(s));
 }
 
+// ---- OMPLIR SELECTORS D'ESCENARI ────────────────────────────────────────────
+// Definim quins escenaris corresponen a cada tipus de recurs
+const SELECTOR_TYPE_MAP = {
+  'sel-elec-annual-scenario':  'electric',
+  'sel-elec-course-scenario':  'electric',
+  'sel-water-annual-scenario': 'water',
+  'sel-water-course-scenario': 'water',
+  'sel-office-annual-scenario':'office',
+  'sel-office-course-scenario':'office',
+  'sel-clean-annual-scenario': 'cleaning',
+  'sel-clean-course-scenario': 'cleaning',
+};
+
+function populateScenarioSelects() {
+  Object.entries(SELECTOR_TYPE_MAP).forEach(([selId, resourceType]) => {
+    const sel = document.getElementById(selId);
+    if (!sel) return;
+
+    const keys = SCENARIO_GROUPS[resourceType];
+    const optKeys = keys.filter(k => SCENARIO_META[k].group === 'opt');
+    const pesKeys = keys.filter(k => SCENARIO_META[k].group === 'pessimist');
+
+    sel.innerHTML = `<option value="base">${SCENARIO_META.base.label}</option>`;
+
+    // Opcions globals
+    const grpGlobal = document.createElement('optgroup');
+    grpGlobal.label = '⚡ Escenaris globals';
+    ['all_opt', 'all_pes'].forEach(k => {
+      const o = document.createElement('option');
+      o.value = k;
+      o.textContent = SCENARIO_META[k].label;
+      grpGlobal.appendChild(o);
+    });
+    sel.appendChild(grpGlobal);
+
+    const grpOpt = document.createElement('optgroup');
+    grpOpt.label = '🟢 Optimista';
+    optKeys.forEach(k => {
+      const o = document.createElement('option');
+      o.value = k;
+      o.textContent = SCENARIO_META[k].label;
+      grpOpt.appendChild(o);
+    });
+    sel.appendChild(grpOpt);
+
+    const grpPes = document.createElement('optgroup');
+    grpPes.label = '🔴 Pessimista';
+    pesKeys.forEach(k => {
+      const o = document.createElement('option');
+      o.value = k;
+      o.textContent = SCENARIO_META[k].label;
+      grpPes.appendChild(o);
+    });
+    sel.appendChild(grpPes);
+  });
+}
+
 // ---- CALCULADORA HANDLERS ----
-// Cada binding: [btnId, yearSelId, scenarioSelId, resultId, type, mode]
+// Cada binding: [yearInputId, scenarioSelId, resultId, type, mode]
 function bindCalculators() {
+  const currentYear = new Date().getFullYear();
+
   const bindings = [
-    ['btn-elec-annual',  'sel-elec-annual-year',  'sel-elec-annual-scenario',  'res-elec-annual',  'electric', 'annual'],
-    ['btn-elec-course',  'sel-elec-course-year',  'sel-elec-course-scenario',  'res-elec-course',  'electric', 'course'],
-    ['btn-water-annual', 'sel-water-annual-year', 'sel-water-annual-scenario', 'res-water-annual', 'water',    'annual'],
-    ['btn-water-course', 'sel-water-course-year', 'sel-water-course-scenario', 'res-water-course', 'water',    'course'],
-    ['btn-office-annual','sel-office-annual-year','sel-office-annual-scenario','res-office-annual','office',   'annual'],
-    ['btn-office-course','sel-office-course-year','sel-office-course-scenario','res-office-course','office',   'course'],
-    ['btn-clean-annual', 'sel-clean-annual-year', 'sel-clean-annual-scenario', 'res-clean-annual', 'cleaning', 'annual'],
-    ['btn-clean-course', 'sel-clean-course-year', 'sel-clean-course-scenario', 'res-clean-course', 'cleaning', 'course'],
+    ['inp-elec-annual-year',  'sel-elec-annual-scenario',  'res-elec-annual',  'electric', 'annual'],
+    ['inp-elec-course-year',  'sel-elec-course-scenario',  'res-elec-course',  'electric', 'course'],
+    ['inp-water-annual-year', 'sel-water-annual-scenario', 'res-water-annual', 'water',    'annual'],
+    ['inp-water-course-year', 'sel-water-course-scenario', 'res-water-course', 'water',    'course'],
+    ['inp-office-annual-year','sel-office-annual-scenario','res-office-annual','office',   'annual'],
+    ['inp-office-course-year','sel-office-course-scenario','res-office-course','office',   'course'],
+    ['inp-clean-annual-year', 'sel-clean-annual-scenario', 'res-clean-annual', 'cleaning', 'annual'],
+    ['inp-clean-course-year', 'sel-clean-course-scenario', 'res-clean-course', 'cleaning', 'course'],
   ];
 
-  bindings.forEach(([btnId, yearSelId, scenarioSelId, resId, type, mode]) => {
-    const btn = document.getElementById(btnId);
-    if (!btn) return;
-    btn.addEventListener('click', () => {
-      const year     = parseInt(document.getElementById(yearSelId)?.value || '2025');
-      const scenario = document.getElementById(scenarioSelId)?.value || 'base';
+  bindings.forEach(([yearInpId, scenarioSelId, resId, type, mode]) => {
+    const yearInp     = document.getElementById(yearInpId);
+    const scenarioSel = document.getElementById(scenarioSelId);
+    if (!yearInp || !scenarioSel) return;
+
+    // Valor per defecte: any vinent
+    yearInp.value = currentYear + 1;
+    yearInp.min   = currentYear;
+    yearInp.max   = currentYear + 50;
+
+    const doCalc = () => {
+      let year = parseInt(yearInp.value);
+      if (isNaN(year) || year < currentYear) { year = currentYear; yearInp.value = year; }
+      if (year > currentYear + 50)           { year = currentYear + 50; yearInp.value = year; }
+      const scenario = scenarioSel.value || 'base';
       renderCalcResult(resId, type, mode, year, scenario);
-    });
+    };
+
+    yearInp.addEventListener('input', doCalc);
+    yearInp.addEventListener('change', doCalc);
+    scenarioSel.addEventListener('change', doCalc);
+
+    // Càlcul inicial automàtic
+    doCalc();
   });
 }
 
@@ -426,6 +616,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { initAccordions();       } catch(e) { console.error('initAccordions:', e); }
   try { initScrollAnimations(); } catch(e) { console.error('initScrollAnimations:', e); }
   try { initNavScroll();        } catch(e) { console.error('initNavScroll:', e); }
+  try { populateScenarioSelects(); } catch(e) { console.error('populateScenarioSelects:', e); }
   try { bindCalculators();      } catch(e) { console.error('bindCalculators:', e); }
   try { initProgressBars();     } catch(e) { console.error('initProgressBars:', e); }
   try { calcWithReductions();   } catch(e) { console.error('calcWithReductions:', e); }
