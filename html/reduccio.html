@@ -29,9 +29,45 @@
       <p class="section-sub">Projecció d'estalvi aplicant mesures correctores immediates</p>
     </div>
 
+    <div class="dashboard-grid" style="margin-bottom: 2rem;">
+      <div class="kpi-card fade-up">
+        <div class="kpi-label">🎯 Objectiu Global</div>
+        <div class="kpi-value" style="color: var(--c-green);">-30%</div>
+        <div class="kpi-trend trend-down">Estalvi directe sobre consum actual</div>
+      </div>
+      <div class="kpi-card fade-up" style="animation-delay:0.1s">
+        <div class="kpi-label">⏳ Termini d'Execució</div>
+        <div class="kpi-value" style="color: var(--c-blue);">3 Anys</div>
+        <div class="kpi-trend">Fases 1, 2 i 3 (36 mesos)</div>
+      </div>
+      <div class="kpi-card fade-up" style="animation-delay:0.2s">
+        <div class="kpi-label">💰 Estalvi Estimat</div>
+        <div class="kpi-value" style="color: var(--c-gold);">~5.300 €</div>
+        <div class="kpi-trend trend-down">Estalvi econòmic anual projectat</div>
+      </div>
+    </div>
+
     <div class="card fade-up">
+      <h3 style="margin-bottom: 1rem; color: var(--c-white);">Desglossament de l'Estalvi per Categoria</h3>
       <div id="reduction-results">
         <p style="text-align:center; padding: 2rem; color:var(--c-muted)">Carregant dades de reducció...</p>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div class="card fade-up" style="display: flex; flex-direction: column; max-width: 600px; margin: 2rem auto 0 auto;">
+      <h3 style="color: var(--c-text); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span style="color: var(--c-green); font-size: 1.2rem;">📄</span> EXPORTAR INFORME DE REDUCCIÓ
+      </h3>
+      <p style="font-size: 0.95rem; color: var(--c-white); margin-bottom: 1.5rem;">
+        Exporta l'informe complet amb els indicadors i el pla de reducció del 30%.
+      </p>
+      <button class="btn-export-pdf" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: var(--c-blue); padding: 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; width: 100%; font-size: 1rem;">
+        📥 Exportar PDF
+      </button>
+      <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; padding: 1rem; display: flex; gap: 0.75rem; align-items: flex-start;">
+        <span style="color: var(--c-green);">ℹ️</span>
+        <p style="font-size: 0.85rem; color: var(--c-muted); margin: 0;">El PDF inclou el desglossament per categories, objectius i l'estalvi anual estimat.</p>
       </div>
     </div>
   </div>

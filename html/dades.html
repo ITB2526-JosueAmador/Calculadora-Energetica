@@ -50,9 +50,34 @@
     <div class="card fade-up" style="margin-top: 2rem;">
       <h3>Distribució de Despeses</h3>
       <p style="color:var(--c-muted); margin-bottom: 1.5rem;">Resum visual de la distribució del pressupost de sostenibilitat.</p>
-
       <div id="category-chart"></div>
     </div>
+
+    <div class="card fade-up" style="margin-top: 2rem;">
+      <h3>Registre de Factures</h3>
+      <p style="color:var(--c-muted); margin-bottom: 1.5rem;">Detall complet de les despeses registrades en el període d'anàlisi.</p>
+      
+      <div style="overflow-x:auto;">
+        <table class="data-table" style="width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem;">
+          <thead>
+            <tr style="text-align: left; color: var(--c-muted); border-bottom: 1px solid var(--c-border);">
+              <th style="padding: 1rem;">ID</th>
+              <th style="padding: 1rem;">Data</th>
+              <th style="padding: 1rem;">Proveïdor</th>
+              <th style="padding: 1rem;">Descripció</th>
+              <th style="padding: 1rem;">Categoria</th>
+              <th style="padding: 1rem; text-align:right;">Import Total</th>
+              <th style="padding: 1rem; text-align:right;">IVA</th>
+              <th style="padding: 1rem;">Pagament</th>
+            </tr>
+          </thead>
+          <tbody id="factures-tbody">
+            <!-- generat per JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 </section>
 

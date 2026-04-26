@@ -29,16 +29,45 @@
       <p class="section-sub">Reduir, Reutilitzar i Reciclar en l'entorn educatiu</p>
     </div>
 
-    <div class="grid-2">
+    <div class="grid-2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
       <div class="card fade-up">
-        <h3 style="color:var(--c-green); margin-bottom:1rem">Gestió de Residus</h3>
+        <h3 style="color:var(--c-green); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">♻️ Gestió de Residus</h3>
         <p>Millora de la senyalització dels punts de recollida selectiva al centre i introducció de contenidors específics per a residus electrònics (e-waste).</p>
       </div>
       <div class="card fade-up" style="animation-delay: 0.1s">
-        <h3 style="color:var(--c-gold); margin-bottom:1rem">Compromís Social</h3>
+        <h3 style="color:var(--c-gold); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">👥 Compromís Social</h3>
         <p>Tallers de conscienciació per a l'alumnat i creació de la figura del "Delegat de Sostenibilitat" per a cada línia educativa.</p>
       </div>
+      <div class="card fade-up" style="animation-delay: 0.2s">
+        <h3 style="color:var(--c-blue); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">📱 Digitalització</h3>
+        <p>Reducció de l'ús de paper mitjançant la digitalització de formularis administratius (F-XXX) i promoció de l'ús de plataformes digitals.</p>
+      </div>
+      <div class="card fade-up" style="animation-delay: 0.3s">
+        <h3 style="color:var(--c-green); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">🧼 Compra a Granel</h3>
+        <p>Introducció de sistemes de compra a granel per a productes de neteja, reduint el consum d'envasos plàstics al centre.</p>
+      </div>
     </div>
+
+    <!-- CIRCULAR ACTION PLAN -->
+    <div class="card fade-up" style="display: flex; flex-direction: column; max-width: 600px; margin: 0 auto;">
+      <h3 style="color: var(--c-text); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+        <span style="color: var(--c-green); font-size: 1.2rem;">♻️</span> PLA D'ACCIÓ CIRCULAR
+      </h3>
+      <p style="font-size: 0.95rem; color: var(--c-muted); margin-bottom: 1.5rem;">
+        Activa les millores projectades a 3 anys per veure l'estalvi real respecte al consum base.
+      </p>
+      <button id="btn-toggle-plan" style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--c-green); color: var(--c-green); padding: 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; width: 100%; font-size: 1rem;">
+        ✓ Pla Activat (-30%)
+      </button>
+      <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; padding: 1.25rem;">
+        <h4 style="color: var(--c-green); font-size: 0.95rem; margin-bottom: 1rem;">Estalvi anual estimat amb el pla del -30%:</h4>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--c-white);">
+          <div>⚡ <strong style="color: var(--c-green);">29.638 kWh</strong> <span style="color: var(--c-muted);">menys d'electricitat</span></div>
+          <div>💧 <strong style="color: var(--c-blue);">86.344 L</strong> <span style="color: var(--c-muted);">menys d'aigua</span></div>
+          <div>📄 <strong style="color: var(--c-green);">84</strong> <span style="color: var(--c-muted);">paquets de paper A4 menys</span></div>
+          <div>🧼 <strong style="color: var(--c-green);">380</strong> <span style="color: var(--c-muted);">rotlles de paper de neteja menys</span></div>
+        </div>
+      </div>
   </div>
 </section>
 

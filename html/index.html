@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,372 +8,567 @@
   <meta name="description" content="Calculadora de projeccions d'indicadors de sostenibilitat per a ITB Leaks." />
   <link rel="stylesheet" href="../css/styles.css" />
 </head>
+
 <body>
 
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">ITB <span>Leaks</span> · Sostenibilitat</a>
-    <nav class="nav-links">
-      <a href="index.html" class="active">Calculadora</a>
-      <a href="dades.html">Dades</a>
-      <a href="accions.html">Accions</a>
-      <a href="reduccio.html">Reducció 30%</a>
-      <a href="circular.html">Economia Circular</a>
-      <a href="#cronograma">Cronograma</a>
-    </nav>
-    <button class="nav-mobile-btn">☰</button>
-  </div>
-</header>
-
-<section id="inici" class="hero">
-  <div class="hero-tag">📊 Informe F3</div>
-  <h1>Calculadora de<br><em>Sostenibilitat</em></h1>
-  <p>Fes les teves projeccions i calcula el consum anual o per curs escolar amb factors estacionals.</p>
-</section>
-
-<section id="calculadora" style="background:var(--c-surface);padding:4rem 2rem">
-  <div class="container">
-    <div class="fade-up">
-      <div class="section-title">Calculadora de <span>Projeccions</span></div>
-      <p class="section-sub">8 càlculs amb factors estacionals · Inflació anual estimada +3% · Variabilitat mensual realista</p>
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">ITB <span>Leaks</span> · Sostenibilitat</a>
+      <nav class="nav-links">
+        <a href="index.html" class="active">Calculadora</a>
+        <a href="dades.html">Dades</a>
+        <a href="accions.html">Accions</a>
+        <a href="reduccio.html">Reducció 30%</a>
+        <a href="circular.html">Economia Circular</a>
+        <a href="#cronograma">Cronograma</a>
+      </nav>
+      <button class="nav-mobile-btn">☰</button>
     </div>
+  </header>
 
-    <div class="calc-tabs fade-up">
-      <button class="calc-tab active" data-panel="p-elec-annual">⚡ Electricitat Anual</button>
-      <button class="calc-tab" data-panel="p-elec-course">⚡ Electricitat Curs</button>
-      <button class="calc-tab" data-panel="p-water-annual">💧 Aigua Anual</button>
-      <button class="calc-tab" data-panel="p-water-course">💧 Aigua Curs</button>
-      <button class="calc-tab" data-panel="p-office-annual">📄 Oficina Anual</button>
-      <button class="calc-tab" data-panel="p-office-course">📄 Oficina Curs</button>
-      <button class="calc-tab" data-panel="p-clean-annual">🧹 Neteja Anual</button>
-      <button class="calc-tab" data-panel="p-clean-course">🧹 Neteja Curs</button>
-    </div>
+  <section id="inici" class="hero">
+    <div class="hero-tag">📊 Informe F3</div>
+    <h1>Calculadora de<br><em>Sostenibilitat</em></h1>
+    <p>Fes les teves projeccions i calcula el consum anual o per curs escolar amb factors estacionals.</p>
+  </section>
 
-    <!-- PANEL 1: Electricitat Anual -->
-    <div id="p-elec-annual" class="calc-panel active fade-up">
-      <div class="card">
-        <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
-          ⚡ Consum Elèctric — <span style="color:var(--c-gold)">Pròxim Any</span>
-        </h3>
-        <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
-          Projecció basada en la instal·lació elèctrica (F046) amb variació estacional: pics hivernals (+30%) i reduccions estivals (−20%).
-        </p>
-        <div class="calc-form">
-          <div class="form-group">
-            <label>Any de projecció</label>
-            <div class="year-stepper" id="stepper-inp-elec-annual-year">
+  <section id="calculadora" style="background:var(--c-surface);padding:4rem 2rem">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-title">Calculadora de <span>Projeccions</span></div>
+        <p class="section-sub">8 càlculs amb factors estacionals · Inflació anual estimada +3% · Variabilitat mensual
+          realista</p>
+      </div>
+
+      <div class="calc-tabs fade-up">
+        <button class="calc-tab active" data-panel="p-elec-annual">⚡ Electricitat Anual</button>
+        <button class="calc-tab" data-panel="p-elec-course">⚡ Electricitat Curs</button>
+        <button class="calc-tab" data-panel="p-water-annual">💧 Aigua Anual</button>
+        <button class="calc-tab" data-panel="p-water-course">💧 Aigua Curs</button>
+        <button class="calc-tab" data-panel="p-office-annual">📄 Oficina Anual</button>
+        <button class="calc-tab" data-panel="p-office-course">📄 Oficina Curs</button>
+        <button class="calc-tab" data-panel="p-clean-annual">🧹 Neteja Anual</button>
+        <button class="calc-tab" data-panel="p-clean-course">🧹 Neteja Curs</button>
+      </div>
+
+      <!-- PANEL 1: Electricitat Anual -->
+      <div id="p-elec-annual" class="calc-panel active fade-up">
+        <div class="card">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
+            ⚡ Consum Elèctric — <span style="color:var(--c-gold)">Pròxim Any</span>
+          </h3>
+          <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
+            Projecció basada en la instal·lació elèctrica (F046) amb variació estacional: pics hivernals (+30%) i
+            reduccions estivals (−20%).
+          </p>
+          <div class="calc-form">
+            <div class="form-group">
+              <label>Any de projecció</label>
+              <div class="year-stepper" id="stepper-inp-elec-annual-year">
                 <button type="button" class="stepper-btn stepper-dec" data-target="inp-elec-annual-year">−</button>
-                <input type="text" inputmode="numeric" id="inp-elec-annual-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <input type="text" inputmode="numeric" id="inp-elec-annual-year" class="stepper-input"
+                  placeholder="2026" maxlength="4" />
                 <button type="button" class="stepper-btn stepper-inc" data-target="inp-elec-annual-year">+</button>
               </div>
+            </div>
+            <div class="form-group">
+              <label>Escenari</label>
+              <select id="sel-elec-annual-scenario">
+                <option value="base">Base (tendència actual)</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Escenari</label>
-            <select id="sel-elec-annual-scenario">
-              <option value="base">Base (tendència actual)</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="calc-result" id="res-elec-annual">
-          <div class="result-main"></div>
-          <div class="result-label"></div>
-          <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
-          <div class="result-breakdown"></div>
-        </div>
-        <div style="margin-top:1.5rem;padding:1rem;background:rgba(232,193,106,0.06);border-radius:10px;border:1px solid rgba(232,193,106,0.15)">
-          <p style="font-size:0.8rem;color:var(--c-muted)">🌡️ <strong style="color:var(--c-gold)">Factors estacionals:</strong> Hivern (gen-feb): ×1.30 | Primavera: ×0.90 | Estiu: ×0.80 | Tardor: ×1.05 | Inflació energètica: +3%/any</p>
+          <div class="calc-result" id="res-elec-annual">
+            <div class="result-main"></div>
+            <div class="result-label"></div>
+            <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
+            <div class="result-breakdown"></div>
+          </div>
+          <div
+            style="margin-top:1.5rem;padding:1rem;background:rgba(232,193,106,0.06);border-radius:10px;border:1px solid rgba(232,193,106,0.15)">
+            <p style="font-size:0.8rem;color:var(--c-muted)">🌡️ <strong style="color:var(--c-gold)">Factors
+                estacionals:</strong> Hivern (gen-feb): ×1.30 | Primavera: ×0.90 | Estiu: ×0.80 | Tardor: ×1.05 |
+              Inflació energètica: +3%/any</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- PANEL 2: Electricitat Curs -->
-    <div id="p-elec-course" class="calc-panel fade-up">
-      <div class="card">
-        <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
-          ⚡ Consum Elèctric — <span style="color:var(--c-gold)">Per Curs Escolar</span>
-        </h3>
-        <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
-          Projecció del curs escolar (setembre–juny) amb factors estacionals adaptats al calendari lectiu.
-        </p>
-        <div class="calc-form">
-          <div class="form-group">
-            <label>Any d'inici del curs</label>
-            <div class="year-stepper" id="stepper-inp-elec-course-year">
+      <!-- PANEL 2: Electricitat Curs -->
+      <div id="p-elec-course" class="calc-panel fade-up">
+        <div class="card">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
+            ⚡ Consum Elèctric — <span style="color:var(--c-gold)">Per Curs Escolar</span>
+          </h3>
+          <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
+            Projecció del curs escolar (setembre–juny) amb factors estacionals adaptats al calendari lectiu.
+          </p>
+          <div class="calc-form">
+            <div class="form-group">
+              <label>Any d'inici del curs</label>
+              <div class="year-stepper" id="stepper-inp-elec-course-year">
                 <button type="button" class="stepper-btn stepper-dec" data-target="inp-elec-course-year">−</button>
-                <input type="text" inputmode="numeric" id="inp-elec-course-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <input type="text" inputmode="numeric" id="inp-elec-course-year" class="stepper-input"
+                  placeholder="2026" maxlength="4" />
                 <button type="button" class="stepper-btn stepper-inc" data-target="inp-elec-course-year">+</button>
               </div>
+            </div>
+            <div class="form-group">
+              <label>Escenari</label>
+              <select id="sel-elec-course-scenario">
+                <option value="base">Base (tendència actual)</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Escenari</label>
-            <select id="sel-elec-course-scenario">
-              <option value="base">Base (tendència actual)</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="calc-result" id="res-elec-course">
-          <div class="result-main"></div>
-          <div class="result-label"></div>
-          <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
-          <div class="result-breakdown"></div>
-        </div>
-        <div style="margin-top:1.5rem;padding:1rem;background:rgba(232,193,106,0.06);border-radius:10px;border:1px solid rgba(232,193,106,0.15)">
-          <p style="font-size:0.8rem;color:var(--c-muted)">🌡️ <strong style="color:var(--c-gold)">Factors estacionals:</strong> Hivern (gen-feb): ×1.30 | Primavera: ×0.90 | Estiu: ×0.80 | Tardor: ×1.05 | Inflació energètica: +3%/any</p>
+          <div class="calc-result" id="res-elec-course">
+            <div class="result-main"></div>
+            <div class="result-label"></div>
+            <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
+            <div class="result-breakdown"></div>
+          </div>
+          <div
+            style="margin-top:1.5rem;padding:1rem;background:rgba(232,193,106,0.06);border-radius:10px;border:1px solid rgba(232,193,106,0.15)">
+            <p style="font-size:0.8rem;color:var(--c-muted)">🌡️ <strong style="color:var(--c-gold)">Factors
+                estacionals:</strong> Hivern (gen-feb): ×1.30 | Primavera: ×0.90 | Estiu: ×0.80 | Tardor: ×1.05 |
+              Inflació energètica: +3%/any</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- PANEL 3: Aigua Anual -->
-    <div id="p-water-annual" class="calc-panel fade-up">
-      <div class="card">
-        <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
-          💧 Consum d'Aigua — <span style="color:var(--c-blue)">Pròxim Any</span>
-        </h3>
-        <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
-          Projecció del consum d'aigua amb pics estivals (+35%) per reg de jardí i menor consum hivernal.
-        </p>
-        <div class="calc-form">
-          <div class="form-group">
-            <label>Any de projecció</label>
-            <div class="year-stepper" id="stepper-inp-water-annual-year">
+      <!-- PANEL 3: Aigua Anual -->
+      <div id="p-water-annual" class="calc-panel fade-up">
+        <div class="card">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
+            💧 Consum d'Aigua — <span style="color:var(--c-blue)">Pròxim Any</span>
+          </h3>
+          <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
+            Projecció del consum d'aigua amb pics estivals (+35%) per reg de jardí i menor consum hivernal.
+          </p>
+          <div class="calc-form">
+            <div class="form-group">
+              <label>Any de projecció</label>
+              <div class="year-stepper" id="stepper-inp-water-annual-year">
                 <button type="button" class="stepper-btn stepper-dec" data-target="inp-water-annual-year">−</button>
-                <input type="text" inputmode="numeric" id="inp-water-annual-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <input type="text" inputmode="numeric" id="inp-water-annual-year" class="stepper-input"
+                  placeholder="2026" maxlength="4" />
                 <button type="button" class="stepper-btn stepper-inc" data-target="inp-water-annual-year">+</button>
               </div>
+            </div>
+            <div class="form-group">
+              <label>Escenari</label>
+              <select id="sel-water-annual-scenario">
+                <option value="base">Base (tendència actual)</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Escenari</label>
-            <select id="sel-water-annual-scenario">
-              <option value="base">Base (tendència actual)</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="calc-result" id="res-water-annual">
-          <div class="result-main"></div>
-          <div class="result-label"></div>
-          <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
-          <div class="result-breakdown"></div>
-        </div>
-        <div style="margin-top:1.5rem;padding:1rem;background:rgba(92,168,232,0.06);border-radius:10px;border:1px solid rgba(92,168,232,0.15)">
-          <p style="font-size:0.8rem;color:var(--c-muted)">💧 <strong style="color:var(--c-blue)">Factors estacionals:</strong> Hivern: ×0.72 | Primavera: ×0.90 | Estiu: ×1.35 | Tardor: ×0.90 | Increment anual: +3%/any</p>
+          <div class="calc-result" id="res-water-annual">
+            <div class="result-main"></div>
+            <div class="result-label"></div>
+            <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
+            <div class="result-breakdown"></div>
+          </div>
+          <div
+            style="margin-top:1.5rem;padding:1rem;background:rgba(92,168,232,0.06);border-radius:10px;border:1px solid rgba(92,168,232,0.15)">
+            <p style="font-size:0.8rem;color:var(--c-muted)">💧 <strong style="color:var(--c-blue)">Factors
+                estacionals:</strong> Hivern: ×0.72 | Primavera: ×0.90 | Estiu: ×1.35 | Tardor: ×0.90 | Increment anual:
+              +3%/any</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- PANEL 4: Aigua Curs -->
-    <div id="p-water-course" class="calc-panel fade-up">
-      <div class="card">
-        <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
-          💧 Consum d'Aigua — <span style="color:var(--c-blue)">Per Curs Escolar</span>
-        </h3>
-        <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
-          Projecció del consum d'aigua durant el curs escolar (setembre–juny).
-        </p>
-        <div class="calc-form">
-          <div class="form-group">
-            <label>Any d'inici del curs</label>
-            <div class="year-stepper" id="stepper-inp-water-course-year">
+      <!-- PANEL 4: Aigua Curs -->
+      <div id="p-water-course" class="calc-panel fade-up">
+        <div class="card">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
+            💧 Consum d'Aigua — <span style="color:var(--c-blue)">Per Curs Escolar</span>
+          </h3>
+          <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
+            Projecció del consum d'aigua durant el curs escolar (setembre–juny).
+          </p>
+          <div class="calc-form">
+            <div class="form-group">
+              <label>Any d'inici del curs</label>
+              <div class="year-stepper" id="stepper-inp-water-course-year">
                 <button type="button" class="stepper-btn stepper-dec" data-target="inp-water-course-year">−</button>
-                <input type="text" inputmode="numeric" id="inp-water-course-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <input type="text" inputmode="numeric" id="inp-water-course-year" class="stepper-input"
+                  placeholder="2026" maxlength="4" />
                 <button type="button" class="stepper-btn stepper-inc" data-target="inp-water-course-year">+</button>
               </div>
+            </div>
+            <div class="form-group">
+              <label>Escenari</label>
+              <select id="sel-water-course-scenario">
+                <option value="base">Base (tendència actual)</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Escenari</label>
-            <select id="sel-water-course-scenario">
-              <option value="base">Base (tendència actual)</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="calc-result" id="res-water-course">
-          <div class="result-main"></div>
-          <div class="result-label"></div>
-          <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
-          <div class="result-breakdown"></div>
-        </div>
-        <div style="margin-top:1.5rem;padding:1rem;background:rgba(92,168,232,0.06);border-radius:10px;border:1px solid rgba(92,168,232,0.15)">
-          <p style="font-size:0.8rem;color:var(--c-muted)">💧 <strong style="color:var(--c-blue)">Factors estacionals:</strong> Hivern: ×0.72 | Primavera: ×0.90 | Estiu: ×1.35 | Tardor: ×0.90 | Increment anual: +3%/any</p>
+          <div class="calc-result" id="res-water-course">
+            <div class="result-main"></div>
+            <div class="result-label"></div>
+            <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
+            <div class="result-breakdown"></div>
+          </div>
+          <div
+            style="margin-top:1.5rem;padding:1rem;background:rgba(92,168,232,0.06);border-radius:10px;border:1px solid rgba(92,168,232,0.15)">
+            <p style="font-size:0.8rem;color:var(--c-muted)">💧 <strong style="color:var(--c-blue)">Factors
+                estacionals:</strong> Hivern: ×0.72 | Primavera: ×0.90 | Estiu: ×1.35 | Tardor: ×0.90 | Increment anual:
+              +3%/any</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- PANEL 5: Oficina Anual -->
-    <div id="p-office-annual" class="calc-panel fade-up">
-      <div class="card">
-        <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
-          📄 Consumibles d'Oficina — <span style="color:var(--c-green)">Pròxim Any</span>
-        </h3>
-        <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
-          Projecció del material d'oficina amb baixa estival (juliol-agost al 50%) i pics de tardor.
-        </p>
-        <div class="calc-form">
-          <div class="form-group">
-            <label>Any de projecció</label>
-            <div class="year-stepper" id="stepper-inp-office-annual-year">
+      <!-- PANEL 5: Oficina Anual -->
+      <div id="p-office-annual" class="calc-panel fade-up">
+        <div class="card">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
+            📄 Consumibles d'Oficina — <span style="color:var(--c-green)">Pròxim Any</span>
+          </h3>
+          <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
+            Projecció del material d'oficina amb baixa estival (juliol-agost al 50%) i pics de tardor.
+          </p>
+          <div class="calc-form">
+            <div class="form-group">
+              <label>Any de projecció</label>
+              <div class="year-stepper" id="stepper-inp-office-annual-year">
                 <button type="button" class="stepper-btn stepper-dec" data-target="inp-office-annual-year">−</button>
-                <input type="text" inputmode="numeric" id="inp-office-annual-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <input type="text" inputmode="numeric" id="inp-office-annual-year" class="stepper-input"
+                  placeholder="2026" maxlength="4" />
                 <button type="button" class="stepper-btn stepper-inc" data-target="inp-office-annual-year">+</button>
               </div>
+            </div>
+            <div class="form-group">
+              <label>Escenari</label>
+              <select id="sel-office-annual-scenario">
+                <option value="base">Base (tendència actual)</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Escenari</label>
-            <select id="sel-office-annual-scenario">
-              <option value="base">Base (tendència actual)</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="calc-result" id="res-office-annual">
-          <div class="result-main"></div>
-          <div class="result-label"></div>
-          <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
-          <div class="result-breakdown"></div>
-        </div>
-        <div style="margin-top:1.5rem;padding:1rem;background:rgba(62,207,116,0.06);border-radius:10px;border:1px solid rgba(62,207,116,0.15)">
-          <p style="font-size:0.8rem;color:var(--c-muted)">📄 <strong style="color:var(--c-green)">Factors estacionals:</strong> Hivern: ×1.10 | Primavera: ×1.00 | Estiu (jul-ago): ×0.50 | Tardor: ×1.15 | Increment anual: +3%/any</p>
+          <div class="calc-result" id="res-office-annual">
+            <div class="result-main"></div>
+            <div class="result-label"></div>
+            <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
+            <div class="result-breakdown"></div>
+          </div>
+          <div
+            style="margin-top:1.5rem;padding:1rem;background:rgba(62,207,116,0.06);border-radius:10px;border:1px solid rgba(62,207,116,0.15)">
+            <p style="font-size:0.8rem;color:var(--c-muted)">📄 <strong style="color:var(--c-green)">Factors
+                estacionals:</strong> Hivern: ×1.10 | Primavera: ×1.00 | Estiu (jul-ago): ×0.50 | Tardor: ×1.15 |
+              Increment anual: +3%/any</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- PANEL 6: Oficina Curs -->
-    <div id="p-office-course" class="calc-panel fade-up">
-      <div class="card">
-        <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
-          📄 Consumibles d'Oficina — <span style="color:var(--c-green)">Per Curs Escolar</span>
-        </h3>
-        <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
-          Projecció del material d'oficina durant el curs escolar (setembre–juny).
-        </p>
-        <div class="calc-form">
-          <div class="form-group">
-            <label>Any d'inici del curs</label>
-            <div class="year-stepper" id="stepper-inp-office-course-year">
+      <!-- PANEL 6: Oficina Curs -->
+      <div id="p-office-course" class="calc-panel fade-up">
+        <div class="card">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
+            📄 Consumibles d'Oficina — <span style="color:var(--c-green)">Per Curs Escolar</span>
+          </h3>
+          <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
+            Projecció del material d'oficina durant el curs escolar (setembre–juny).
+          </p>
+          <div class="calc-form">
+            <div class="form-group">
+              <label>Any d'inici del curs</label>
+              <div class="year-stepper" id="stepper-inp-office-course-year">
                 <button type="button" class="stepper-btn stepper-dec" data-target="inp-office-course-year">−</button>
-                <input type="text" inputmode="numeric" id="inp-office-course-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <input type="text" inputmode="numeric" id="inp-office-course-year" class="stepper-input"
+                  placeholder="2026" maxlength="4" />
                 <button type="button" class="stepper-btn stepper-inc" data-target="inp-office-course-year">+</button>
               </div>
+            </div>
+            <div class="form-group">
+              <label>Escenari</label>
+              <select id="sel-office-course-scenario">
+                <option value="base">Base (tendència actual)</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Escenari</label>
-            <select id="sel-office-course-scenario">
-              <option value="base">Base (tendència actual)</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="calc-result" id="res-office-course">
-          <div class="result-main"></div>
-          <div class="result-label"></div>
-          <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
-          <div class="result-breakdown"></div>
-        </div>
-        <div style="margin-top:1.5rem;padding:1rem;background:rgba(62,207,116,0.06);border-radius:10px;border:1px solid rgba(62,207,116,0.15)">
-          <p style="font-size:0.8rem;color:var(--c-muted)">📄 <strong style="color:var(--c-green)">Factors estacionals:</strong> Hivern: ×1.10 | Primavera: ×1.00 | Estiu (jul-ago): ×0.50 | Tardor: ×1.15 | Increment anual: +3%/any</p>
+          <div class="calc-result" id="res-office-course">
+            <div class="result-main"></div>
+            <div class="result-label"></div>
+            <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
+            <div class="result-breakdown"></div>
+          </div>
+          <div
+            style="margin-top:1.5rem;padding:1rem;background:rgba(62,207,116,0.06);border-radius:10px;border:1px solid rgba(62,207,116,0.15)">
+            <p style="font-size:0.8rem;color:var(--c-muted)">📄 <strong style="color:var(--c-green)">Factors
+                estacionals:</strong> Hivern: ×1.10 | Primavera: ×1.00 | Estiu (jul-ago): ×0.50 | Tardor: ×1.15 |
+              Increment anual: +3%/any</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- PANEL 7: Neteja Anual -->
-    <div id="p-clean-annual" class="calc-panel fade-up">
-      <div class="card">
-        <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
-          🧹 Productes de Neteja — <span style="color:var(--c-green)">Pròxim Any</span>
-        </h3>
-        <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
-          Projecció dels productes de neteja amb reducció estival (juliol-agost al 70%) i increment de tardor.
-        </p>
-        <div class="calc-form">
-          <div class="form-group">
-            <label>Any de projecció</label>
-            <div class="year-stepper" id="stepper-inp-clean-annual-year">
+      <!-- PANEL 7: Neteja Anual -->
+      <div id="p-clean-annual" class="calc-panel fade-up">
+        <div class="card">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
+            🧹 Productes de Neteja — <span style="color:var(--c-green)">Pròxim Any</span>
+          </h3>
+          <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
+            Projecció dels productes de neteja amb reducció estival (juliol-agost al 70%) i increment de tardor.
+          </p>
+          <div class="calc-form">
+            <div class="form-group">
+              <label>Any de projecció</label>
+              <div class="year-stepper" id="stepper-inp-clean-annual-year">
                 <button type="button" class="stepper-btn stepper-dec" data-target="inp-clean-annual-year">−</button>
-                <input type="text" inputmode="numeric" id="inp-clean-annual-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <input type="text" inputmode="numeric" id="inp-clean-annual-year" class="stepper-input"
+                  placeholder="2026" maxlength="4" />
                 <button type="button" class="stepper-btn stepper-inc" data-target="inp-clean-annual-year">+</button>
               </div>
+            </div>
+            <div class="form-group">
+              <label>Escenari</label>
+              <select id="sel-clean-annual-scenario">
+                <option value="base">Base (tendència actual)</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Escenari</label>
-            <select id="sel-clean-annual-scenario">
-              <option value="base">Base (tendència actual)</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="calc-result" id="res-clean-annual">
-          <div class="result-main"></div>
-          <div class="result-label"></div>
-          <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
-          <div class="result-breakdown"></div>
-        </div>
-        <div style="margin-top:1.5rem;padding:1rem;background:rgba(168,232,92,0.06);border-radius:10px;border:1px solid rgba(168,232,92,0.15)">
-          <p style="font-size:0.8rem;color:var(--c-muted)">🧹 <strong style="color:#a8e85c">Factors estacionals:</strong> Hivern: ×1.05 | Primavera: ×1.00 | Estiu (jul-ago): ×0.70 | Tardor: ×1.10 | Increment anual: +3%/any</p>
+          <div class="calc-result" id="res-clean-annual">
+            <div class="result-main"></div>
+            <div class="result-label"></div>
+            <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
+            <div class="result-breakdown"></div>
+          </div>
+          <div
+            style="margin-top:1.5rem;padding:1rem;background:rgba(168,232,92,0.06);border-radius:10px;border:1px solid rgba(168,232,92,0.15)">
+            <p style="font-size:0.8rem;color:var(--c-muted)">🧹 <strong style="color:#a8e85c">Factors
+                estacionals:</strong> Hivern: ×1.05 | Primavera: ×1.00 | Estiu (jul-ago): ×0.70 | Tardor: ×1.10 |
+              Increment anual: +3%/any</p>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- PANEL 8: Neteja Curs -->
-    <div id="p-clean-course" class="calc-panel fade-up">
-      <div class="card">
-        <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
-          🧹 Productes de Neteja — <span style="color:var(--c-green)">Per Curs Escolar</span>
-        </h3>
-        <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
-          Projecció dels productes de neteja durant el curs escolar (setembre–juny).
-        </p>
-        <div class="calc-form">
-          <div class="form-group">
-            <label>Any d'inici del curs</label>
-            <div class="year-stepper" id="stepper-inp-clean-course-year">
+      <!-- PANEL 8: Neteja Curs -->
+      <div id="p-clean-course" class="calc-panel fade-up">
+        <div class="card">
+          <h3 style="font-family:'Playfair Display',serif;color:var(--c-white);margin-bottom:0.75rem">
+            🧹 Productes de Neteja — <span style="color:var(--c-green)">Per Curs Escolar</span>
+          </h3>
+          <p style="font-size:0.85rem;color:var(--c-muted);margin-bottom:1.5rem">
+            Projecció dels productes de neteja durant el curs escolar (setembre–juny).
+          </p>
+          <div class="calc-form">
+            <div class="form-group">
+              <label>Any d'inici del curs</label>
+              <div class="year-stepper" id="stepper-inp-clean-course-year">
                 <button type="button" class="stepper-btn stepper-dec" data-target="inp-clean-course-year">−</button>
-                <input type="text" inputmode="numeric" id="inp-clean-course-year" class="stepper-input" placeholder="2026" maxlength="4" />
+                <input type="text" inputmode="numeric" id="inp-clean-course-year" class="stepper-input"
+                  placeholder="2026" maxlength="4" />
                 <button type="button" class="stepper-btn stepper-inc" data-target="inp-clean-course-year">+</button>
               </div>
+            </div>
+            <div class="form-group">
+              <label>Escenari</label>
+              <select id="sel-clean-course-scenario">
+                <option value="base">Base (tendència actual)</option>
+              </select>
+            </div>
           </div>
-          <div class="form-group">
-            <label>Escenari</label>
-            <select id="sel-clean-course-scenario">
-              <option value="base">Base (tendència actual)</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="calc-result" id="res-clean-course">
-          <div class="result-main"></div>
-          <div class="result-label"></div>
-          <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
-          <div class="result-breakdown"></div>
+          <div class="calc-result" id="res-clean-course">
+            <div class="result-main"></div>
+            <div class="result-label"></div>
+            <div class="monthly-chart bar-chart" style="margin-top:1.25rem"></div>
+            <div class="result-breakdown"></div>
+          </div>
+          <div
+            style="margin-top:1.5rem;padding:1rem;background:rgba(168,232,92,0.06);border-radius:10px;border:1px solid rgba(168,232,92,0.15)">
+            <p style="font-size:0.8rem;color:var(--c-muted)">🧹 <strong style="color:#a8e85c">Factors
+                estacionals:</strong> Hivern: ×1.05 | Primavera: ×1.00 | Estiu (jul-ago): ×0.70 | Tardor: ×1.10 |
+              Increment anual: +3%/any</p>
+          </div>
         </div>
-        <div style="margin-top:1.5rem;padding:1rem;background:rgba(168,232,92,0.06);border-radius:10px;border:1px solid rgba(168,232,92,0.15)">
-          <p style="font-size:0.8rem;color:var(--c-muted)">🧹 <strong style="color:#a8e85c">Factors estacionals:</strong> Hivern: ×1.05 | Primavera: ×1.00 | Estiu (jul-ago): ×0.70 | Tardor: ×1.10 | Increment anual: +3%/any</p>
+      </div>
+
+      <!-- EXPLICACIÓ TOT OPTIMISTA -->
+      <div
+        style="margin-top: 2rem; padding: 1.5rem; background: rgba(59, 130, 246, 0.08); border-radius: var(--radius); border: 1px solid rgba(59, 130, 246, 0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <h4 style="color: var(--c-blue); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span style="font-size: 1.2rem;">ℹ️</span> Nota sobre "Tot optimista"
+        </h4>
+        <p style="font-size: 0.9rem; color: var(--c-text); line-height: 1.5;">
+          El comportament que veieu és correcte per disseny: 🌟 <strong>Tot optimista (×0.72)</strong> aplica un factor
+          global a tots els recursos alhora. Però quan tries per exemple ☀️ <strong>Panells fotovoltaics
+            (×0.68)</strong>, aquest té un factor més agressiu que el global en electricitat concretament —perquè el
+          global és un promig conservador que contempla totes les categories.
+        </p>
+      </div>
+
+    </div><!-- /container -->
+  </section>
+
+  <!-- SIMULADOR D'ACCIONS DE REDUCCIÓ -->
+  <section id="simulador-accions"
+    style="padding:4rem 2rem;background:var(--c-surface2); border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border);">
+    <div class="container" style="max-width: 1000px;">
+      <div class="fade-up">
+        <div class="card" style="padding: 2rem;">
+          <h2
+            style="font-size: 1.5rem; font-weight: 700; color: var(--c-white); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            🎛️ Simulador d'Accions de Reducció
+          </h2>
+          <p style="font-size: 0.9rem; color: var(--c-muted); margin-bottom: 2rem;">
+            Activa o desactiva accions per veure com canvia la reducció de consum i cost. Els resultats s'actualitzen en
+            temps real.
+          </p>
+
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
+            <div style="display: flex; gap: 1rem;">
+              <button id="btn-activate-all"
+                style="background: rgba(16, 185, 129, 0.15); color: var(--c-green); border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">✅
+                Activar totes</button>
+              <button id="btn-deactivate-all"
+                style="background: rgba(239, 68, 68, 0.1); color: var(--c-red); border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">❌
+                Desactivar totes</button>
+            </div>
+            <div style="flex: 1; max-width: 400px; display: flex; flex-direction: column; gap: 0.5rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                <span style="color: var(--c-muted);">Progrés objectiu -30%</span>
+                <span id="sim-progress-text" style="color: var(--c-blue); font-weight: 700;">0.0%</span>
+              </div>
+              <div style="height: 8px; background: var(--c-bg); border-radius: 4px; overflow: hidden;">
+                <div id="sim-progress-bar"
+                  style="height: 100%; width: 0%; background: var(--c-green); transition: width 0.4s ease;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            <!-- Energia -->
+            <div
+              style="background: rgba(0,0,0,0.2); border: 1px solid var(--c-border); border-radius: 12px; padding: 1.5rem;">
+              <h3
+                style="color: var(--c-white); font-size: 1.1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                ⚡ Energia</h3>
+              <div class="sim-actions" id="sim-actions-energia">
+                <!-- JS -->
+              </div>
+            </div>
+            <!-- Aigua -->
+            <div
+              style="background: rgba(0,0,0,0.2); border: 1px solid var(--c-border); border-radius: 12px; padding: 1.5rem;">
+              <h3
+                style="color: var(--c-white); font-size: 1.1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                💧 Aigua</h3>
+              <div class="sim-actions" id="sim-actions-aigua">
+                <!-- JS -->
+              </div>
+            </div>
+            <!-- Consumibles -->
+            <div
+              style="background: rgba(0,0,0,0.2); border: 1px solid var(--c-border); border-radius: 12px; padding: 1.5rem;">
+              <h3
+                style="color: var(--c-white); font-size: 1.1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                ♻️ Consumibles</h3>
+              <div class="sim-actions" id="sim-actions-consumibles">
+                <!-- JS -->
+              </div>
+            </div>
+            <!-- Neteja -->
+            <div
+              style="background: rgba(0,0,0,0.2); border: 1px solid var(--c-border); border-radius: 12px; padding: 1.5rem;">
+              <h3
+                style="color: var(--c-white); font-size: 1.1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                🧼 Neteja</h3>
+              <div class="sim-actions" id="sim-actions-neteja">
+                <!-- JS -->
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+  </section>
 
-  </div><!-- /container -->
-</section>
+  <!-- EXPORT & CIRCULAR ACTION PLAN -->
+  <section style="padding:4rem 2rem;background:var(--c-bg)">
+    <div class="container"
+      style="max-width: 1000px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
 
-<section id="cronograma" style="padding:4rem 2rem;background:var(--c-bg)">
-  <div class="container">
-    <div class="fade-up">
-      <div class="section-title">Cronograma de <span>Millores</span></div>
-      <p class="section-sub" style="margin-bottom:2.5rem">Full de ruta per implementar les millores d'estalvi per ordre d'impacte i inversió</p>
+      <!-- EXPORT -->
+      <div class="card fade-up" style="display: flex; flex-direction: column;">
+        <h3
+          style="color: var(--c-text); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: var(--c-green); font-size: 1.2rem;">📄</span> EXPORTAR
+        </h3>
+        <p style="font-size: 0.95rem; color: var(--c-white); margin-bottom: 1.5rem;">
+          Exporta l'informe complet amb tots els indicadors i el pla de reducció.
+        </p>
+        <button class="btn-export-pdf"
+          style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: var(--c-blue); padding: 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; width: 100%; font-size: 1rem;">
+          📥 Exportar PDF
+        </button>
+        <div
+          style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; padding: 1rem; display: flex; gap: 0.75rem; align-items: flex-start;">
+          <span style="color: var(--c-green);">ℹ️</span>
+          <p style="font-size: 0.85rem; color: var(--c-muted); margin: 0;">El PDF inclou els 8 indicadors, gràfics
+            mensuals i el pla de reducció.</p>
+        </div>
+      </div>
+
+      <!-- CIRCULAR ACTION PLAN -->
+      <div class="card fade-up" style="display: flex; flex-direction: column;">
+        <h3
+          style="color: var(--c-text); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span style="color: var(--c-green); font-size: 1.2rem;">♻️</span> PLA D'ACCIÓ CIRCULAR
+        </h3>
+        <p style="font-size: 0.95rem; color: var(--c-muted); margin-bottom: 1.5rem;">
+          Activa les millores projectades a 3 anys per veure l'estalvi real respecte al consum base.
+        </p>
+        <button id="btn-toggle-plan"
+          style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--c-green); color: var(--c-green); padding: 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; width: 100%; font-size: 1rem;">
+          ✓ Pla Activat (-30%)
+        </button>
+        <div
+          style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; padding: 1.25rem;">
+          <h4 style="color: var(--c-green); font-size: 0.95rem; margin-bottom: 1rem;">Estalvi anual estimat amb el pla
+            del -30%:</h4>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--c-white);">
+            <div>⚡ <strong style="color: var(--c-green);">29.638 kWh</strong> <span style="color: var(--c-muted);">menys
+                d'electricitat</span></div>
+            <div>💧 <strong style="color: var(--c-blue);">86.344 L</strong> <span style="color: var(--c-muted);">menys
+                d'aigua</span></div>
+            <div>📄 <strong style="color: var(--c-green);">84</strong> <span style="color: var(--c-muted);">paquets de
+                paper A4 menys</span></div>
+            <div>🧼 <strong style="color: var(--c-green);">380</strong> <span style="color: var(--c-muted);">rotlles de
+                paper de neteja menys</span></div>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="timeline fade-up" id="timeline-container">
-      <!-- generat per JS -->
+  </section>
+
+
+  <section id="cronograma" style="padding:4rem 2rem;background:var(--c-bg)">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-title">Cronograma de <span>Millores</span></div>
+        <p class="section-sub" style="margin-bottom:2.5rem">Full de ruta per implementar les millores d'estalvi per
+          ordre d'impacte i inversió</p>
+      </div>
+      <div class="timeline fade-up" id="timeline-container">
+        <!-- generat per JS -->
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer>
-  <p style="text-align:center;padding:2rem;color:var(--c-muted);border-top:1px solid var(--c-border)">
-    <strong>ITB Leaks · Indicadors de Sostenibilitat</strong> — Projecte F3 · Josue i Ramiro
-  </p>
-</footer>
+  <footer>
+    <p style="text-align:center;padding:2rem;color:var(--c-muted);border-top:1px solid var(--c-border)">
+      <strong>ITB Leaks · Indicadors de Sostenibilitat</strong> — Projecte F3 · Josue i Ramiro
+    </p>
+  </footer>
 
-<script src="../js/app.js"></script>
+  <script src="../js/app.js"></script>
 </body>
+
 </html>
