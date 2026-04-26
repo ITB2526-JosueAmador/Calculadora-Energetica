@@ -338,7 +338,7 @@ function renderCalcResult(containerId, type, mode, year, scenario) {
 // Gràfic de barres
   const chartContainer = container.querySelector('.monthly-chart');
   if (chartContainer) {
-    const { months: referenceMonths } = calcProjection(type, mode, year, 'pessimist');
+    const { months: referenceMonths } = calcProjection(type, mode, year, 'all_pes');
     const maxVal = Math.max(...referenceMonths.map(m => m.value));
     const color = getBarColor(type);
 
@@ -654,6 +654,167 @@ function calcWithReductions() {
   `;
 }
 
+// ---- CRONOGRAMA GRÀFIC v2 ----
+function renderTimeline() {
+  const container = document.getElementById('timeline-container');
+  if (!container) return;
+
+  // Temporització realista: startM/endM = número de mes dins els 36 mesos del pla
+  // Mes 1 = Setembre any 1, Mes 12 = Agost any 2, Mes 36 = Agost any 3
+  const phases = [
+    {
+      id: 'f1',
+      phase: 'Fase 1 — Accions immediates',
+      period: 'Mesos 1–6  ·  Set → Feb',
+      desc: 'Sense inversió gran: canvis de comportament, substitució de material i sensors bàsics.',
+      color: '#10b981',
+      icon: '⚡',
+      actions: [
+        { icon: '💡', label: 'LED + sensors presència',    saving: '−20% elèctric', startM: 1,  endM: 3  },
+        { icon: '📋', label: 'Impressió doble cara',        saving: '−17% oficina',  startM: 1,  endM: 2  },
+        { icon: '🔬', label: 'Auditoria processos neteja',  saving: '−6% neteja',   startM: 2,  endM: 4  },
+        { icon: '🚿', label: 'Cisternes i airejadors',      saving: '−7% aigua',    startM: 3,  endM: 6  },
+      ]
+    },
+    {
+      id: 'f2',
+      phase: 'Fase 2 — Millores planificades',
+      period: 'Mesos 7–18  ·  Mar → Ago any 2',
+      desc: 'Inversió moderada amb retorn en 1–2 anys: sistemes de gestió i digitalització.',
+      color: '#f59e0b',
+      icon: '🌱',
+      actions: [
+        { icon: '🔌', label: 'Gestió intel·ligent consum',  saving: '−15% elèctric', startM: 7,  endM: 10 },
+        { icon: '📱', label: 'Digitalització total oficina', saving: '−28% oficina',  startM: 7,  endM: 12 },
+        { icon: '🔍', label: 'Sensors de fuites',            saving: '−18% aigua',    startM: 10, endM: 13 },
+        { icon: '🌿', label: 'Productes ecològics conc.',    saving: '−22% neteja',   startM: 12, endM: 18 },
+      ]
+    },
+    {
+      id: 'f3',
+      phase: 'Fase 3 — Infraestructura verda',
+      period: 'Mesos 19–36  ·  Set any 2 → Ago any 3',
+      desc: 'Gran inversió amb retorn a llarg termini i màxim impacte en sostenibilitat.',
+      color: '#3b82f6',
+      icon: '🚀',
+      actions: [
+        { icon: '♻️', label: 'Recuperació aigües grises',   saving: '−30% aigua',    startM: 19, endM: 24 },
+        { icon: '🤖', label: 'Maquinària alta eficiència',  saving: '−16% neteja',   startM: 20, endM: 26 },
+        { icon: '🏷️', label: 'Certificació energètica A+', saving: '−10% elèctric', startM: 22, endM: 30 },
+        { icon: '☀️', label: 'Panells fotovoltaics',        saving: '−32% elèctric', startM: 28, endM: 36 },
+      ]
+    },
+  ];
+
+  // Calcula estalvi total estimat
+  const yr = new Date().getFullYear() + 1;
+  const totalBase = Object.keys(BASE_COSTS).reduce((s, k) => s + calcProjection(k,'annual',yr,'base').total, 0);
+  const totalOpt  = Object.keys(BASE_COSTS).reduce((s, k) => s + calcProjection(k,'annual',yr,'all_opt').total, 0);
+  const totalSaving = totalBase - totalOpt;
+  const savingPct   = ((totalSaving / totalBase) * 100).toFixed(0);
+
+  // Etiquetes de la regla de mesos (36 mesos, trimestrals)
+  const startMonth = 9; // Setembre
+  const monthNames = ['','Gen','Feb','Mar','Abr','Mai','Jun','Jul','Ago','Set','Oct','Nov','Des'];
+  const rulerCells = Array.from({ length: 36 }, (_, i) => {
+    const m = ((startMonth - 1 + i) % 12) + 1;
+    const isQ = (i % 3 === 0);
+    return `<div class="tl-ruler-month${isQ ? ' quarter-start' : ''}">${isQ ? monthNames[m] : ''}</div>`;
+  }).join('');
+
+  // Files del diagrama Gantt (una per acció)
+  const ganttOpacity = ['0.90','0.75','0.62','0.50'];
+  const ganttRows = phases.flatMap((p, pi) =>
+    p.actions.map((a, ai) => {
+      // Convertim a percentatge del total de 36 mesos
+      const left  = (((a.startM - 1) / 36) * 100).toFixed(2);
+      const width = (((a.endM - a.startM + 1) / 36) * 100).toFixed(2);
+      // Color amb opacitat decreixent per cada acció dins la fase
+      const hex = p.color;
+      return `<div class="tl-gantt-row" title="${a.label} · Mes ${a.startM}–${a.endM}">
+        <div class="tl-gantt-bar" style="left:${left}%;width:${width}%;background:${hex};opacity:${ganttOpacity[ai]};">
+          ${a.icon} ${a.label}
+        </div>
+      </div>`;
+    })
+  ).join('');
+
+  // Targetes de fase
+  const phaseBlocks = phases.map(p => `
+    <div class="tl-phase-block" style="--phase-color:${p.color}">
+      <div class="tl-phase-head">
+        <div class="tl-phase-icon">${p.icon}</div>
+        <div>
+          <div class="tl-phase-title">${p.phase}</div>
+          <div class="tl-phase-period">${p.period}</div>
+          <div class="tl-phase-desc">${p.desc}</div>
+        </div>
+      </div>
+      <div class="tl-phase-cards">
+        ${p.actions.map(a => `
+          <div class="tl-card">
+            <div class="tl-card-icon">${a.icon}</div>
+            <div style="min-width:0">
+              <div class="tl-card-label">${a.label}</div>
+              <div class="tl-card-meta">
+                <span class="tl-card-saving">${a.saving}</span>
+                <span class="tl-card-month">Mes ${a.startM}–${a.endM}</span>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  container.innerHTML = `
+    <div class="tl-summary">
+      <div class="tl-summary-stat">
+        <div class="tl-summary-stat-label">Estalvi potencial total</div>
+        <div class="tl-summary-stat-val">−${fmt(totalSaving)} € <span>/ any</span></div>
+      </div>
+      <div class="tl-summary-divider"></div>
+      <div class="tl-summary-stat">
+        <div class="tl-summary-stat-label">Reducció estimada</div>
+        <div class="tl-summary-stat-val" style="color:#10b981">−${savingPct}%</div>
+      </div>
+      <div class="tl-summary-divider"></div>
+      <div class="tl-summary-progress">
+        <div class="tl-summary-progress-label">Progrés del pla</div>
+        <div class="tl-progress-track">
+          <div class="tl-progress-fill" data-target="${savingPct}%"></div>
+        </div>
+        <div class="tl-progress-hint">3 fases · 12 accions · 36 mesos</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:2rem">
+      <div style="font-size:0.75rem;font-weight:600;color:var(--c-muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:0.75rem">
+        📅 Diagrama temporal — 36 mesos (Set any 1 → Ago any 3)
+      </div>
+      <div class="tl-ruler-wrap">
+        <div class="tl-ruler">
+          <div class="tl-ruler-months">${rulerCells}</div>
+          <div class="tl-gantt-rows">${ganttRows}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-phases">${phaseBlocks}</div>
+  `;
+
+  // Anima la barra de progrés
+  const bar = container.querySelector('.tl-progress-fill');
+  if (bar) {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { bar.style.width = bar.dataset.target; obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.3 });
+    obs.observe(bar);
+  }
+}
+
 // ---- INIT ----
 document.addEventListener('DOMContentLoaded', async () => {
   try { await loadData();       } catch(e) { console.error('loadData:', e); }
@@ -666,6 +827,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { bindCalculators();         } catch(e) { console.error('bindCalculators:', e); }
   try { initProgressBars();     } catch(e) { console.error('initProgressBars:', e); }
   try { calcWithReductions();   } catch(e) { console.error('calcWithReductions:', e); }
+  try { renderTimeline();       } catch(e) { console.error('renderTimeline:', e); }
 
   setTimeout(() => {
     document.querySelectorAll('.hero-stat .val').forEach(el => {
