@@ -421,16 +421,16 @@
           </p>
 
           <div
-            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;">
-            <div style="display: flex; gap: 1rem;">
+            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2rem;">
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; width: 100%;">
               <button id="btn-activate-all"
-                style="background: rgba(16, 185, 129, 0.15); color: var(--c-green); border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">✅
+                style="flex: 1; min-width: 140px; background: rgba(16, 185, 129, 0.15); color: var(--c-green); border: 1px solid rgba(16, 185, 129, 0.3); padding: 0.75rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">✅
                 Activar totes</button>
               <button id="btn-deactivate-all"
-                style="background: rgba(239, 68, 68, 0.1); color: var(--c-red); border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">❌
-                Desactivar totes</button>
+                style="flex: 1; min-width: 140px; background: rgba(239, 68, 68, 0.1); color: var(--c-red); border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.75rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition);">❌
+                Desactivar</button>
             </div>
-            <div style="flex: 1; max-width: 400px; display: flex; flex-direction: column; gap: 0.5rem;">
+            <div style="flex: 1; min-width: 100%; display: flex; flex-direction: column; gap: 0.5rem;">
               <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
                 <span style="color: var(--c-muted);">Progrés objectiu -30%</span>
                 <span id="sim-progress-text" style="color: var(--c-blue); font-weight: 700;">0.0%</span>
@@ -442,7 +442,7 @@
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
             <!-- Energia -->
             <div
               style="background: rgba(0,0,0,0.2); border: 1px solid var(--c-border); border-radius: 12px; padding: 1.5rem;">
@@ -515,51 +515,7 @@
         </div>
       </div>
 
-      <!-- CIRCULAR ACTION PLAN -->
-      <div class="card fade-up" style="display: flex; flex-direction: column;">
-        <h3
-          style="color: var(--c-text); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-          <span style="color: var(--c-green); font-size: 1.2rem;">♻️</span> PLA D'ACCIÓ CIRCULAR
-        </h3>
-        <p style="font-size: 0.95rem; color: var(--c-muted); margin-bottom: 1.5rem;">
-          Activa les millores projectades a 3 anys per veure l'estalvi real respecte al consum base.
-        </p>
-        <button id="btn-toggle-plan"
-          style="background: rgba(16, 185, 129, 0.1); border: 1px solid var(--c-green); color: var(--c-green); padding: 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; width: 100%; font-size: 1rem;">
-          ✓ Pla Activat (-30%)
-        </button>
-        <div
-          style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 8px; padding: 1.25rem;">
-          <h4 style="color: var(--c-green); font-size: 0.95rem; margin-bottom: 1rem;">Estalvi anual estimat amb el pla
-            del -30%:</h4>
-          <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.9rem; color: var(--c-white);">
-            <div>⚡ <strong style="color: var(--c-green);">29.638 kWh</strong> <span style="color: var(--c-muted);">menys
-                d'electricitat</span></div>
-            <div>💧 <strong style="color: var(--c-blue);">86.344 L</strong> <span style="color: var(--c-muted);">menys
-                d'aigua</span></div>
-            <div>📄 <strong style="color: var(--c-green);">84</strong> <span style="color: var(--c-muted);">paquets de
-                paper A4 menys</span></div>
-            <div>🧼 <strong style="color: var(--c-green);">380</strong> <span style="color: var(--c-muted);">rotlles de
-                paper de neteja menys</span></div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-
-  <section id="cronograma" style="padding:4rem 2rem;background:var(--c-bg)">
-    <div class="container">
-      <div class="fade-up">
-        <div class="section-title">Cronograma de <span>Millores</span></div>
-        <p class="section-sub" style="margin-bottom:2.5rem">Full de ruta per implementar les millores d'estalvi per
-          ordre d'impacte i inversió</p>
-      </div>
-      <div class="timeline fade-up" id="timeline-container">
-        <!-- generat per JS -->
-      </div>
-    </div>
+  </div>
   </section>
 
   <footer>
