@@ -1,58 +1,277 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Economia Circular — ITB Leaks</title>
   <link rel="stylesheet" href="../css/styles.css" />
 </head>
+
 <body>
 
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">ITB <span>Leaks</span> · Sostenibilitat</a>
-    <nav class="nav-links">
-      <a href="index.html">Calculadora</a>
-      <a href="dades.html">Dades</a>
-      <a href="accions.html">Accions</a>
-      <a href="reduccio.html">Reducció 30%</a>
-      <a href="circular.html" class="active">Economia Circular</a>
-    </nav>
-    <button class="nav-mobile-btn">☰</button>
-  </div>
-</header>
-
-<section id="circular" class="section">
-  <div class="container">
-    <div class="fade-up">
-      <div class="section-title">Economia <span>Circular</span></div>
-      <p class="section-sub">Reduir, Reutilitzar i Reciclar en l'entorn educatiu</p>
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">ITB <span>Leaks</span> · Sostenibilitat</a>
+      <nav class="nav-links">
+        <a href="index.html">Calculadora</a>
+        <a href="dades.html">Dades</a>
+        <a href="accions.html">Accions i Cronograma</a>
+        <a href="reduccio.html">Reducció 49.6%</a>
+        <a href="circular.html" class="active">Economia Circular</a>
+      </nav>
+      <button class="nav-mobile-btn">☰</button>
     </div>
+  </header>
 
-    <div class="grid-2" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
-      <div class="card fade-up">
-        <h3 style="color:var(--c-green); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">♻️ Gestió de Residus</h3>
-        <p>Millora de la senyalització dels punts de recollida selectiva al centre i introducció de contenidors específics per a residus electrònics (e-waste).</p>
+  <section id="circular" class="section">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-title">Economia <span>Circular</span></div>
+        <p class="section-sub">Reduir, Reutilitzar i Reciclar en l'entorn educatiu</p>
       </div>
-      <div class="card fade-up" style="animation-delay: 0.1s">
-        <h3 style="color:var(--c-gold); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">👥 Compromís Social</h3>
-        <p>Tallers de conscienciació per a l'alumnat i creació de la figura del "Delegat de Sostenibilitat" per a cada línia educativa.</p>
-      </div>
-      <div class="card fade-up" style="animation-delay: 0.2s">
-        <h3 style="color:var(--c-blue); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">📱 Digitalització</h3>
-        <p>Reducció de l'ús de paper mitjançant la digitalització de formularis administratius (F-XXX) i promoció de l'ús de plataformes digitals.</p>
-      </div>
-      <div class="card fade-up" style="animation-delay: 0.3s">
-        <h3 style="color:var(--c-green); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">🧼 Compra a Granel</h3>
-        <p>Introducció de sistemes de compra a granel per a productes de neteja, reduint el consum d'envasos plàstics al centre.</p>
-      </div>
-  </div>
-</section>
 
-<footer>
-  <p><strong>ITB Leaks · Sostenibilitat</strong> — Projecte F3</p>
-</footer>
+      <!-- Banner -->
+      <div class="card fade-up" style="padding: 0; overflow: hidden; margin-bottom: 2.5rem;">
+        <img src="../img/circular_economy.png" alt="Economia Circular - Model Educatiu Sostenible"
+          style="width: 100%; max-height: 350px; object-fit: cover; display: block;">
+        <div style="padding: 1.5rem 2rem;">
+          <h3 style="color: var(--c-white); margin-bottom: 0.75rem;">🌍 Model d'Economia Circular a l'ITB</h3>
+          <p style="color: var(--c-muted); line-height: 1.7;">
+            L'economia circular és un model de producció i consum que implica compartir, reutilitzar, reparar, renovar i
+            reciclar materials i productes existents tantes vegades com sigui possible per crear valor afegit. D'aquesta
+            manera, el cicle de vida dels productes s'estén i es redueix la generació de residus al mínim. Al nostre
+            centre educatiu, apliquem aquest model per transformar la manera com consumim recursos i gestionem els
+            residus.
+          </p>
+        </div>
+      </div>
 
-<script src="../js/app.js"></script>
+      <!-- KPIs -->
+      <div class="dashboard-grid" style="margin-bottom: 2.5rem;">
+        <div class="kpi-card fade-up">
+          <div class="kpi-label">♻️ Reducció de Residus</div>
+          <div class="kpi-value" style="color: var(--c-green);">-35%</div>
+          <div class="kpi-trend trend-down">Objectiu de reducció de residus sòlids</div>
+        </div>
+        <div class="kpi-card fade-up" style="animation-delay:0.1s">
+          <div class="kpi-label">📦 Reutilització</div>
+          <div class="kpi-value" style="color: var(--c-blue);">60%</div>
+          <div class="kpi-trend">Material d'oficina reutilitzat internament</div>
+        </div>
+        <div class="kpi-card fade-up" style="animation-delay:0.2s">
+          <div class="kpi-label">🌱 Petjada Ecològica</div>
+          <div class="kpi-value" style="color: var(--c-gold);">-22%</div>
+          <div class="kpi-trend trend-down">Reducció de la petjada de carboni anual</div>
+        </div>
+      </div>
+
+      <!-- Pilars principals -->
+      <div class="fade-up" style="margin-bottom: 1.5rem;">
+        <h2 style="color: var(--c-white); font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem;">🔄 Els 4
+          Pilars de la Circularitat al Centre</h2>
+      </div>
+
+      <div class="grid-2"
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+        <div class="card fade-up">
+          <h3 style="color:var(--c-green); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">♻️
+            Gestió de Residus</h3>
+          <p style="margin-bottom: 1rem;">Millora de la senyalització dels punts de recollida selectiva al centre i
+            introducció de contenidors específics per a residus electrònics (e-waste).</p>
+          <ul style="color: var(--c-muted); font-size: 0.88rem; line-height: 1.8; padding-left: 1.2rem;">
+            <li>Instal·lació de <strong style="color: var(--c-white);">12 punts de recollida selectiva</strong> amb
+              senyalització visual</li>
+            <li>Contenidor dedicat per a <strong style="color: var(--c-white);">residus electrònics</strong> (tòners,
+              cables, perifèrics)</li>
+            <li>Acord amb empresa local de reciclatge per a recollida mensual</li>
+            <li>Objectiu: <strong style="color: var(--c-green);">zero abocament</strong> de residus reciclables a
+              contenidor general</li>
+          </ul>
+        </div>
+        <div class="card fade-up" style="animation-delay: 0.1s">
+          <h3 style="color:var(--c-gold); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">👥
+            Compromís Social</h3>
+          <p style="margin-bottom: 1rem;">Tallers de conscienciació per a l'alumnat i creació de la figura del "Delegat
+            de Sostenibilitat" per a cada línia educativa.</p>
+          <ul style="color: var(--c-muted); font-size: 0.88rem; line-height: 1.8; padding-left: 1.2rem;">
+            <li><strong style="color: var(--c-white);">1 Delegat de Sostenibilitat</strong> per línia educativa (ASIX,
+              DAW, DAM, SMX)</li>
+            <li>Tallers trimestrals de conscienciació ambiental</li>
+            <li>Concurs intern de projectes de sostenibilitat amb premis</li>
+            <li>Col·laboració amb entitats locals (Ajuntament, ONG mediambientals)</li>
+          </ul>
+        </div>
+        <div class="card fade-up" style="animation-delay: 0.2s">
+          <h3 style="color:var(--c-blue); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">📱
+            Digitalització</h3>
+          <p style="margin-bottom: 1rem;">Reducció de l'ús de paper mitjançant la digitalització de formularis
+            administratius (F-XXX) i promoció de l'ús de plataformes digitals.</p>
+          <ul style="color: var(--c-muted); font-size: 0.88rem; line-height: 1.8; padding-left: 1.2rem;">
+            <li>Digitalització del <strong style="color: var(--c-white);">100% dels formularis</strong> administratius
+              (F046, F047, F048, F055)</li>
+            <li>Eliminació de l'impressió de butlletins i circulars</li>
+            <li>Implantació de signatura digital per a actes i certificats</li>
+            <li>Estalvi estimat: <strong style="color: var(--c-green);">15.000 fulls/any</strong></li>
+          </ul>
+        </div>
+        <div class="card fade-up" style="animation-delay: 0.3s">
+          <h3 style="color:var(--c-green); margin-bottom:1rem; display: flex; align-items: center; gap: 0.5rem;">🧼
+            Compra a Granel</h3>
+          <p style="margin-bottom: 1rem;">Introducció de sistemes de compra a granel per a productes de neteja, reduint
+            el consum d'envasos plàstics al centre.</p>
+          <ul style="color: var(--c-muted); font-size: 0.88rem; line-height: 1.8; padding-left: 1.2rem;">
+            <li>Substitució del <strong style="color: var(--c-white);">80% dels productes</strong> de neteja per
+              versions a granel</li>
+            <li>Eliminació d'envasos monodosi de plàstic</li>
+            <li>Proveïdors locals amb certificació ecològica</li>
+            <li>Reducció d'un <strong style="color: var(--c-green);">60% dels envasos plàstics</strong> generats</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Cicle de vida -->
+      <div class="card fade-up" style="margin-bottom: 2.5rem; padding: 2rem;">
+        <h3 style="color: var(--c-white); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">🔄
+          Cicle de Vida dels Recursos al Centre</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+          <div
+            style="text-align: center; padding: 1.5rem; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 12px;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">📥</div>
+            <h4 style="color: var(--c-green); margin-bottom: 0.5rem;">1. Adquisició</h4>
+            <p style="font-size: 0.82rem; color: var(--c-muted);">Compra responsable amb criteris de sostenibilitat:
+              productes reciclats, a granel i amb certificació ecològica.</p>
+          </div>
+          <div
+            style="text-align: center; padding: 1.5rem; background: rgba(59, 130, 246, 0.05); border: 1px solid rgba(59, 130, 246, 0.15); border-radius: 12px;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">⚙️</div>
+            <h4 style="color: var(--c-blue); margin-bottom: 0.5rem;">2. Ús Eficient</h4>
+            <p style="font-size: 0.82rem; color: var(--c-muted);">Maximitzar la vida útil dels recursos amb protocols
+              d'ús responsable, impressió a doble cara i manteniment preventiu.</p>
+          </div>
+          <div
+            style="text-align: center; padding: 1.5rem; background: rgba(251, 191, 36, 0.05); border: 1px solid rgba(251, 191, 36, 0.15); border-radius: 12px;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🔁</div>
+            <h4 style="color: var(--c-gold); margin-bottom: 0.5rem;">3. Reutilització</h4>
+            <p style="font-size: 0.82rem; color: var(--c-muted);">Donar una segona vida als materials: redistribució
+              interna, banc de material escolar i reparació d'equipaments.</p>
+          </div>
+          <div
+            style="text-align: center; padding: 1.5rem; background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.15); border-radius: 12px;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">♻️</div>
+            <h4 style="color: var(--c-green); margin-bottom: 0.5rem;">4. Reciclatge</h4>
+            <p style="font-size: 0.82rem; color: var(--c-muted);">Separació selectiva, recollida d'e-waste i
+              col·laboració amb gestors autoritzats per al tractament de residus.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ODS relacionats -->
+      <div class="card fade-up" style="margin-bottom: 2.5rem; padding: 2rem;">
+        <h3 style="color: var(--c-white); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">🎯
+          Objectius de Desenvolupament Sostenible (ODS) Vinculats</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+          <div
+            style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid var(--c-border);">
+            <span style="font-size: 1.8rem; flex-shrink: 0;">💧</span>
+            <div>
+              <h4 style="color: var(--c-blue); font-size: 0.9rem; margin-bottom: 0.3rem;">ODS 6 — Aigua Neta</h4>
+              <p style="font-size: 0.8rem; color: var(--c-muted);">Instal·lació d'airejadors i sistemes de doble
+                descàrrega per reduir el consum hídric un 38%.</p>
+            </div>
+          </div>
+          <div
+            style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid var(--c-border);">
+            <span style="font-size: 1.8rem; flex-shrink: 0;">⚡</span>
+            <div>
+              <h4 style="color: var(--c-gold); font-size: 0.9rem; margin-bottom: 0.3rem;">ODS 7 — Energia Neta</h4>
+              <p style="font-size: 0.8rem; color: var(--c-muted);">Substitució per LED, sensors de moviment i
+                instal·lació de plaques solars fotovoltaiques.</p>
+            </div>
+          </div>
+          <div
+            style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid var(--c-border);">
+            <span style="font-size: 1.8rem; flex-shrink: 0;">🏢</span>
+            <div>
+              <h4 style="color: var(--c-green); font-size: 0.9rem; margin-bottom: 0.3rem;">ODS 11 — Ciutats Sostenibles
+              </h4>
+              <p style="font-size: 0.8rem; color: var(--c-muted);">Conversió del centre en un model de referència en
+                sostenibilitat per a la comunitat educativa.</p>
+            </div>
+          </div>
+          <div
+            style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid var(--c-border);">
+            <span style="font-size: 1.8rem; flex-shrink: 0;">🔄</span>
+            <div>
+              <h4 style="color: var(--c-blue); font-size: 0.9rem; margin-bottom: 0.3rem;">ODS 12 — Consum Responsable
+              </h4>
+              <p style="font-size: 0.8rem; color: var(--c-muted);">Digitalització, compra a granel, eliminació de
+                plàstics d'un sol ús i reutilització de material.</p>
+            </div>
+          </div>
+          <div
+            style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid var(--c-border);">
+            <span style="font-size: 1.8rem; flex-shrink: 0;">🌡️</span>
+            <div>
+              <h4 style="color: var(--c-red, #ef4444); font-size: 0.9rem; margin-bottom: 0.3rem;">ODS 13 — Acció
+                Climàtica</h4>
+              <p style="font-size: 0.8rem; color: var(--c-muted);">Reducció de la petjada de carboni del centre en un
+                22% mitjançant les accions d'eficiència energètica.</p>
+            </div>
+          </div>
+          <div
+            style="display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid var(--c-border);">
+            <span style="font-size: 1.8rem; flex-shrink: 0;">🤝</span>
+            <div>
+              <h4 style="color: var(--c-gold); font-size: 0.9rem; margin-bottom: 0.3rem;">ODS 17 — Aliances</h4>
+              <p style="font-size: 0.8rem; color: var(--c-muted);">Col·laboració amb l'Ajuntament, proveïdors locals i
+                ONG per implementar conjuntament les millores.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Impacte esperat -->
+      <div class="card fade-up" style="padding: 2rem;">
+        <h3 style="color: var(--c-white); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">📊
+          Impacte Esperat a 3 Anys</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+          <div
+            style="padding: 1.25rem; background: rgba(16, 185, 129, 0.05); border-radius: 10px; border-left: 3px solid var(--c-green);">
+            <div style="font-size: 1.6rem; font-weight: 700; color: var(--c-green); margin-bottom: 0.3rem;">15.000</div>
+            <div style="font-size: 0.82rem; color: var(--c-muted);">Fulls de paper estalviats anualment gràcies a la
+              digitalització total</div>
+          </div>
+          <div
+            style="padding: 1.25rem; background: rgba(59, 130, 246, 0.05); border-radius: 10px; border-left: 3px solid var(--c-blue);">
+            <div style="font-size: 1.6rem; font-weight: 700; color: var(--c-blue); margin-bottom: 0.3rem;">120 kg</div>
+            <div style="font-size: 0.82rem; color: var(--c-muted);">Plàstic eliminat anualment per la compra a granel de
+              productes de neteja</div>
+          </div>
+          <div
+            style="padding: 1.25rem; background: rgba(251, 191, 36, 0.05); border-radius: 10px; border-left: 3px solid var(--c-gold);">
+            <div style="font-size: 1.6rem; font-weight: 700; color: var(--c-gold); margin-bottom: 0.3rem;">8.500 €</div>
+            <div style="font-size: 0.82rem; color: var(--c-muted);">Estalvi econòmic anual estimat amb totes les mesures
+              implementades</div>
+          </div>
+          <div
+            style="padding: 1.25rem; background: rgba(16, 185, 129, 0.05); border-radius: 10px; border-left: 3px solid var(--c-green);">
+            <div style="font-size: 1.6rem; font-weight: 700; color: var(--c-green); margin-bottom: 0.3rem;">2.4 t CO₂
+            </div>
+            <div style="font-size: 0.82rem; color: var(--c-muted);">Tones de CO₂ evitades anualment gràcies a
+              l'eficiència energètica</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>ITB Leaks · Indicadors de Sostenibilitat</strong> — Josué Amador i Ramiro Cori</p>
+  </footer>
+
+  <script src="../js/app.js"></script>
 </body>
+
 </html>

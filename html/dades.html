@@ -1,90 +1,96 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dades de Consum — ITB Leaks</title>
   <link rel="stylesheet" href="../css/styles.css" />
 </head>
+
 <body>
 
-<header>
-  <div class="header-inner">
-    <a href="index.html" class="logo">ITB <span>Leaks</span> · Sostenibilitat</a>
-    <nav class="nav-links">
-      <a href="index.html">Calculadora</a>
-      <a href="dades.html" class="active">Dades</a>
-      <a href="accions.html">Accions</a>
-      <a href="reduccio.html">Reducció 30%</a>
-      <a href="circular.html">Economia Circular</a>
-    </nav>
-    <button class="nav-mobile-btn">☰</button>
-  </div>
-</header>
-
-<section id="dades" class="section">
-  <div class="container">
-    <div class="fade-up">
-      <div class="section-title">Anàlisi de <span>Consum Actual</span></div>
-      <p class="section-sub">Dades extretes dels formularis F046, F047 i F048 (Curs 2023 - 2024)</p>
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">ITB <span>Leaks</span> · Sostenibilitat</a>
+      <nav class="nav-links">
+        <a href="index.html">Calculadora</a>
+        <a href="dades.html" class="active">Dades</a>
+        <a href="accions.html">Accions i Cronograma</a>
+        <a href="reduccio.html">Reducció 49.6%</a>
+        <a href="circular.html">Economia Circular</a>
+      </nav>
+      <button class="nav-mobile-btn">☰</button>
     </div>
+  </header>
 
-    <div class="dashboard-grid">
-      <div class="kpi-card fade-up">
-        <div class="kpi-label">⚡ Electricitat Anual</div>
-        <div class="kpi-value" id="kpi-elec">12.450 €</div>
-        <div class="kpi-trend trend-up">↑ +4.2% vs l'any anterior</div>
+  <section id="dades" class="section">
+    <div class="container">
+      <div class="fade-up">
+        <div class="section-title">Anàlisi de <span>Consum Actual</span></div>
+        <p class="section-sub">Dades extretes dels formularis F046, F047 i F048 (Curs 2023 - 2024)</p>
       </div>
-      <div class="kpi-card fade-up" style="animation-delay:0.1s">
-        <div class="kpi-label">💧 Aigua Anual</div>
-        <div class="kpi-value" id="kpi-water">3.120 €</div>
-        <div class="kpi-trend trend-down">↓ -1.5% vs l'any anterior</div>
+
+      <div class="dashboard-grid">
+        <div class="kpi-card fade-up">
+          <div class="kpi-label">⚡ Electricitat Anual</div>
+          <div class="kpi-value" id="kpi-elec">12.450 €</div>
+          <div class="kpi-trend trend-up">↑ +4.2% vs l'any anterior</div>
+        </div>
+        <div class="kpi-card fade-up" style="animation-delay:0.1s">
+          <div class="kpi-label">💧 Aigua Anual</div>
+          <div class="kpi-value" id="kpi-water">3.120 €</div>
+          <div class="kpi-trend trend-down">↓ -1.5% vs l'any anterior</div>
+        </div>
+        <div class="kpi-card fade-up" style="animation-delay:0.2s">
+          <div class="kpi-label">📄 Material d'Oficina</div>
+          <div class="kpi-value" id="kpi-office">1.840 €</div>
+          <div class="kpi-trend">Estable</div>
+        </div>
       </div>
-      <div class="kpi-card fade-up" style="animation-delay:0.2s">
-        <div class="kpi-label">📄 Material d'Oficina</div>
-        <div class="kpi-value" id="kpi-office">1.840 €</div>
-        <div class="kpi-trend">Estable</div>
+
+      <div class="card fade-up" style="margin-top: 2rem;">
+        <h3>Distribució de Despeses</h3>
+        <p style="color:var(--c-muted); margin-bottom: 1.5rem;">Resum visual de la distribució del pressupost de
+          sostenibilitat.</p>
+        <div id="category-chart"></div>
       </div>
+
+      <div class="card fade-up" style="margin-top: 2rem;">
+        <h3>Registre de Factures</h3>
+        <p style="color:var(--c-muted); margin-bottom: 1.5rem;">Detall complet de les despeses registrades en el període
+          d'anàlisi.</p>
+
+        <div style="overflow-x:auto;">
+          <table class="data-table"
+            style="width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem;">
+            <thead>
+              <tr style="text-align: left; color: var(--c-muted); border-bottom: 1px solid var(--c-border);">
+                <th style="padding: 1rem;">ID</th>
+                <th style="padding: 1rem;">Data</th>
+                <th style="padding: 1rem;">Proveïdor</th>
+                <th style="padding: 1rem;">Descripció</th>
+                <th style="padding: 1rem;">Categoria</th>
+                <th style="padding: 1rem; text-align:right;">Import Total</th>
+                <th style="padding: 1rem; text-align:right;">IVA</th>
+                <th style="padding: 1rem;">Pagament</th>
+              </tr>
+            </thead>
+            <tbody id="factures-tbody">
+              <!-- generat per JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
+  </section>
 
-    <div class="card fade-up" style="margin-top: 2rem;">
-      <h3>Distribució de Despeses</h3>
-      <p style="color:var(--c-muted); margin-bottom: 1.5rem;">Resum visual de la distribució del pressupost de sostenibilitat.</p>
-      <div id="category-chart"></div>
-    </div>
+  <footer>
+    <p><strong>ITB Leaks · Indicadors de Sostenibilitat</strong> — Josué Amador i Ramiro Cori</p>
+  </footer>
 
-    <div class="card fade-up" style="margin-top: 2rem;">
-      <h3>Registre de Factures</h3>
-      <p style="color:var(--c-muted); margin-bottom: 1.5rem;">Detall complet de les despeses registrades en el període d'anàlisi.</p>
-      
-      <div style="overflow-x:auto;">
-        <table class="data-table" style="width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem;">
-          <thead>
-            <tr style="text-align: left; color: var(--c-muted); border-bottom: 1px solid var(--c-border);">
-              <th style="padding: 1rem;">ID</th>
-              <th style="padding: 1rem;">Data</th>
-              <th style="padding: 1rem;">Proveïdor</th>
-              <th style="padding: 1rem;">Descripció</th>
-              <th style="padding: 1rem;">Categoria</th>
-              <th style="padding: 1rem; text-align:right;">Import Total</th>
-              <th style="padding: 1rem; text-align:right;">IVA</th>
-              <th style="padding: 1rem;">Pagament</th>
-            </tr>
-          </thead>
-          <tbody id="factures-tbody">
-            <!-- generat per JS -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<footer>
-  <p><strong>ITB Leaks · Sostenibilitat</strong> — Projecte F3</p>
-</footer>
-
-<script src="../js/app.js"></script>
+  <script src="../js/app.js"></script>
 </body>
+
 </html>
