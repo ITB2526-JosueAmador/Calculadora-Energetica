@@ -80,6 +80,9 @@ const SCENARIO_META = {
   base: { label: 'Base (tendència actual)', group: 'base', factor: 1.00,
     desc: 'Projecció sense canvis significatius, seguint la tendència actual de consums.' },
 
+  simulador: { label: '🎛️ Des del Simulador', group: 'base', factor: 1.00,
+    desc: 'Utilitza les accions de reducció actualment activades al Simulador.' },
+
   all_opt: { label: '🌟 Tot optimista (totes les millores)', group: 'opt', factor: 0.72,
     desc: "Escenari global on s'apliquen totes les millores possibles simultàniament: energètiques, hídrica, digitalització i neteja ecològica. Màxim estalvi assolible." },
   all_pes: { label: '💀 Tot pessimista (pitjor cas possible)', group: 'pessimist', factor: 1.22,
@@ -304,7 +307,22 @@ function calcProjection(type, mode, year, scenario = 'base') {
   const seasonal      = SEASONAL[type];
   const inflation     = 0.03;
   const yearAdj       = Math.pow(1 + inflation, year - 2024);
-  const scenarioFact  = SCENARIO_FACTORS[scenario] ?? SCENARIO_META[scenario]?.factor ?? 1.0;
+  let scenarioFact    = SCENARIO_FACTORS[scenario] ?? SCENARIO_META[scenario]?.factor ?? 1.0;
+  let customDesc      = null;
+
+  if (scenario === 'simulador') {
+    const typeMap = { 'electric': 'energia', 'water': 'aigua', 'office': 'consumibles', 'cleaning': 'neteja' };
+    const cat = typeMap[type];
+    let catVal = 0;
+    if (typeof SIMULATOR_ACTIONS !== 'undefined' && SIMULATOR_ACTIONS[cat]) {
+      SIMULATOR_ACTIONS[cat].forEach(act => {
+        const chk = document.getElementById(act.id);
+        if (chk && chk.checked) catVal += act.val;
+      });
+    }
+    scenarioFact = Math.max(0, 1 - (catVal / 100));
+    customDesc = `Reducció del ${catVal}% basada en les opcions seleccionades al simulador per a la categoria de ${cat}.`;
+  }
 
   const indices = mode === 'annual'
     ? [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
@@ -319,15 +337,31 @@ function calcProjection(type, mode, year, scenario = 'base') {
     total += val;
   }
 
-  return { total, months, yearAdj, scenarioFact };
+  return { total, months, yearAdj, scenarioFact, customDesc };
 }
 
 // ---- CALCULADORA: renderitzar resultat ----
-function renderCalcResult(containerId, type, mode, year, scenario) {
+function renderCalcResult(containerId, type, mode, year, scenario, compareScenario, scenarioSelNode) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const { total, months, scenarioFact } = calcProjection(type, mode, year, scenario);
+  const { total, months, scenarioFact, customDesc } = calcProjection(type, mode, year, scenario);
+
+  let compTotal = null;
+  let compMonths = null;
+  let compMeta = null;
+  if (compareScenario && compareScenario !== scenario) {
+    const comp = calcProjection(type, mode, year, compareScenario);
+    compTotal = comp.total;
+    compMonths = comp.months;
+    compMeta = SCENARIO_META[compareScenario] || { label: 'Comparació' };
+  }
+
+  const currentHash = `${year}_${scenario}_${compareScenario}_${total}_${compTotal}`;
+  if (container.dataset.lastHash === currentHash) {
+      return; 
+  }
+  container.dataset.lastHash = currentHash;
 
   const modeLabel = mode === 'annual'
     ? `any ${year}`
@@ -342,6 +376,7 @@ function renderCalcResult(containerId, type, mode, year, scenario) {
 
   const scenarioMeta = SCENARIO_META[scenario] || { label: 'Base', group: 'base', desc: 'Projecció sense canvis.', factor: 1.0 };
   const scenarioGroup = scenarioMeta.group;
+  const finalDesc = customDesc || scenarioMeta.desc;
 
   const scenarioColors = {
     base:      'var(--c-text)',
@@ -352,6 +387,38 @@ function renderCalcResult(containerId, type, mode, year, scenario) {
 
   container.classList.add('show');
 
+  let optionsHtml = `<option value="">-- Sense comparació --</option>`;
+  if (scenarioSelNode) {
+      optionsHtml += scenarioSelNode.innerHTML;
+  }
+
+  let comparisonHtml = `
+    <div style="margin-top:0.75rem; font-size:0.85rem; padding: 0.6rem; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px dashed rgba(255,255,255,0.1);">
+       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem; gap: 1rem;">
+           <span style="color:var(--c-muted)">Comparar amb:</span> 
+           <select class="compare-select" style="flex: 1; padding: 0.3rem 0.5rem; background: var(--c-bg); border: 1px solid var(--c-border); color: var(--c-white); border-radius: 4px; font-size: 0.8rem;">
+               ${optionsHtml}
+           </select>
+       </div>
+  `;
+
+  if (compMeta && compTotal !== null) {
+      const diff = total - compTotal;
+      const diffFmt = diff > 0 ? '+' + fmt(diff) : (diff < 0 ? fmt(diff) : '0');
+      const diffColor = diff > 0 ? 'var(--c-red)' : 'var(--c-green)';
+      comparisonHtml += `
+           <div style="display:flex; justify-content:space-between; margin-bottom:0.25rem;">
+               <span style="color:var(--c-muted)">Cost d'aquella opció:</span> 
+               <strong style="color:var(--c-text)">${fmt(compTotal)} €</strong>
+           </div>
+           <div style="display:flex; justify-content:space-between;">
+               <span style="color:var(--c-muted)">Diferència actual vs comparació:</span> 
+               <strong style="color:${diffColor}">${diffFmt} €</strong>
+           </div>
+      `;
+  }
+  comparisonHtml += `</div>`;
+
   container.querySelector('.result-main').textContent = fmt(total) + ' €';
   container.querySelector('.result-label').innerHTML  =
     `${typeLabels[type]} per al ${modeLabel} &nbsp;
@@ -359,17 +426,30 @@ function renderCalcResult(containerId, type, mode, year, scenario) {
        · ${scenarioMeta.label}
        (×${scenarioFact.toFixed(2)})
      </span>
-     <div style="margin-top:0.5rem;font-size:0.78rem;color:var(--c-muted);font-style:italic">${scenarioMeta.desc}</div>`;
+     <div style="margin-top:0.5rem;font-size:0.78rem;color:var(--c-muted);font-style:italic">${finalDesc}</div>
+     ${comparisonHtml}`;
+
+  const compareSelectNode = container.querySelector('.compare-select');
+  if (compareSelectNode) {
+      compareSelectNode.value = compareScenario || "";
+  }
 
   // Desglosament mensual
   const breakdown = container.querySelector('.result-breakdown');
   if (breakdown) {
-    breakdown.innerHTML = months.map(m => `
+    breakdown.innerHTML = months.map((m, index) => {
+      let compHtml = '';
+      if (compMonths) {
+          compHtml = `<div class="amount" style="color:var(--c-muted); font-size: 0.75rem; margin-top: 2px;">Comp: ${fmt(compMonths[index].value)} €</div>`;
+      }
+      return `
       <div class="breakdown-item">
         <div class="month">${m.label}</div>
-        <div class="amount">${fmt(m.value)} €</div>
+        <div class="amount" style="color:var(--c-white)">${fmt(m.value)} €</div>
+        ${compHtml}
       </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
 // Gràfic de barres
@@ -379,34 +459,35 @@ function renderCalcResult(containerId, type, mode, year, scenario) {
     const maxVal = Math.max(...referenceMonths.map(m => m.value));
     const color = getBarColor(type);
 
-    // Comprobamos si las barras ya están dibujadas en el HTML
-    const existingBars = chartContainer.querySelectorAll('.bar');
-
-    if (existingBars.length === months.length) {
-      // SI YA EXISTEN: Solo actualizamos la altura y el color.
-      // Al no borrar el HTML, la transición CSS hará la animación fluida.
-      months.forEach((m, index) => {
-        const heightPct = ((m.value / maxVal) * 100).toFixed(1);
-        existingBars[index].style.height = `${heightPct}%`;
-        existingBars[index].style.background = color;
-      });
-    } else {
-      // SI NO EXISTEN (es la primera vez que se carga): Creamos el HTML
-      // y añadimos la propiedad CSS 'transition' en línea.
-      chartContainer.innerHTML = months.map(m => {
-        const heightPct = ((m.value / maxVal) * 100).toFixed(1);
-        return `
-          <div class="bar-col">
-            <div class="bar" style="
-              height: ${heightPct}%; 
+    chartContainer.innerHTML = months.map((m, index) => {
+      const heightPct = ((m.value / maxVal) * 100).toFixed(1);
+      let compBarHtml = '';
+      if (compMonths) {
+          const pH = ((compMonths[index].value / maxVal) * 100).toFixed(1);
+          compBarHtml = `<div class="bar" data-h="${pH}%" style="height: 0%; background: rgba(255,255,255,0.15); width: 40%; margin-right: 2px; flex-shrink: 0; transition: height 0.5s ease-out;" title="Comparació: ${fmt(compMonths[index].value)} €"></div>`;
+      }
+      return `
+        <div class="bar-col">
+          <div style="display: flex; align-items: flex-end; height: 100px; width: 100%; justify-content: center; flex: 1;">
+            ${compBarHtml}
+            <div class="bar" data-h="${heightPct}%" style="
+              height: 0%; 
               background: ${color}; 
               transition: height 0.5s ease-out, background 0.5s ease-out;
-            "></div>
-            <div class="bar-lbl">${m.label}</div>
+              width: ${compMonths ? '40%' : '100%'};
+              flex-shrink: 0;
+            " title="Actual: ${fmt(m.value)} €"></div>
           </div>
-        `;
-      }).join('');
-    }
+          <div class="bar-lbl">${m.label}</div>
+        </div>
+      `;
+    }).join('');
+
+    setTimeout(() => {
+        chartContainer.querySelectorAll('.bar').forEach(b => {
+            b.style.height = b.dataset.h;
+        });
+    }, 50);
   }
 }
 
@@ -498,7 +579,7 @@ function populateScenarioSelects() {
     // Opcions globals
     const grpGlobal = document.createElement('optgroup');
     grpGlobal.label = '⚡ Escenaris globals';
-    ['all_opt', 'all_pes'].forEach(k => {
+    ['all_opt', 'all_pes', 'simulador'].forEach(k => {
       const o = document.createElement('option');
       o.value = k;
       o.textContent = SCENARIO_META[k].label;
@@ -601,15 +682,27 @@ function bindCalculators() {
     const scenarioSel = document.getElementById(scenarioSelId);
     if (!yearInp || !scenarioSel) return;
 
+    let compareScenario = '';
+
     const doCalc = () => {
       const y = parseInt(yearInp.value);
       if (isNaN(y) || y < currentYear || y > currentYear + 50) return;
       const scenario = scenarioSel.value || 'base';
-      renderCalcResult(resId, type, mode, y, scenario);
+      renderCalcResult(resId, type, mode, y, scenario, compareScenario, scenarioSel);
     };
 
     yearInp.addEventListener('change', doCalc);
     scenarioSel.addEventListener('change', doCalc);
+
+    const resContainer = document.getElementById(resId);
+    if (resContainer) {
+        resContainer.addEventListener('change', (e) => {
+            if (e.target.classList.contains('compare-select')) {
+                compareScenario = e.target.value;
+                doCalc();
+            }
+        });
+    }
 
     // Càlcul inicial automàtic (després que initYearSteppers hagi posat el valor)
     setTimeout(doCalc, 0);
@@ -633,9 +726,7 @@ function initProgressBars() {
 
 // ---- CALCUL REDUCCIÓ AMB MILLORES ----
 function calcWithReductions() {
-  // Ajustem aquests valors perquè la mitjana ponderada de l'estalvi doni ~35.8%,
-  // quadrant així amb el màxim potencial del simulador d'accions.
-  const reductions = { electric: 0.448, water: 0.38, office: 0.37, cleaning: 0.15 };
+  const reductions = { electric: 0.53, water: 0.38, office: 0.37, cleaning: 0.54 };
   const container  = document.getElementById('reduction-results');
   if (!container) return;
 
@@ -909,7 +1000,10 @@ const SIMULATOR_ACTIONS = {
     { id: 'sim-c2', icon: '📱', label: 'Digitalització de documents', val: 15, time: 'Any 1-2', desc: 'Reducció del 50% d\'impressions mitjançant plataformes digitals i aules virtuals.', ods: 'ODS 12' }
   ],
   neteja: [
-    { id: 'sim-n1', icon: '🧼', label: 'Neteja a granel i reducció d\'envasos (F055)', val: 15, time: 'Any 2', desc: 'Compra a granel de productes de neteja. Reducció del 30% del cost i envasos plàstic.', ods: 'ODS 3' }
+    { id: 'sim-n1', icon: '🧼', label: 'Neteja a granel i reducció d\'envasos', val: 22, time: 'Any 1', desc: 'Substitució per productes ecològics i compra a granel. Reducció del 22%.', ods: 'ODS 3' },
+    { id: 'sim-n2', icon: '🤖', label: 'Maquinària d\'alta eficiència', val: 16, time: 'Any 2', desc: 'Inversió en fregadores automàtiques i aspiradores industrials eficients.', ods: 'ODS 8' },
+    { id: 'sim-n3', icon: '📅', label: 'Optimització de freqüència', val: 10, time: 'Any 1', desc: 'Revisió dels circuits de neteja per optimitzar la freqüència d\'intervenció.', ods: 'ODS 12' },
+    { id: 'sim-n4', icon: '🔬', label: 'Auditoria de processos', val: 6, time: 'Any 1', desc: 'Auditoria completa dels processos per identificar duplicitats.', ods: 'ODS 12' }
   ]
 };
 
@@ -919,9 +1013,9 @@ function initSimulator() {
     if (!container) return;
     
     container.innerHTML = items.map(act => `
-      <div class="sim-action-card" style="background: rgba(255,255,255,0.03); border: 1px solid var(--c-border); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; display: flex; gap: 0.75rem; cursor: pointer; transition: all 0.2s;" onclick="toggleSimAction('${act.id}')" id="card-${act.id}">
+      <div class="sim-action-card" style="background: rgba(255,255,255,0.03); border: 1px solid var(--c-border); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; display: flex; gap: 0.75rem; cursor: pointer; transition: all 0.2s;" onclick="if(event.target.tagName !== 'INPUT' && event.target.tagName !== 'LABEL') { document.getElementById('${act.id}').click(); }" id="card-${act.id}">
         <div>
-          <input type="checkbox" id="${act.id}" class="sim-chk" style="width: 1.1rem; height: 1.1rem; accent-color: var(--c-blue); cursor: pointer;" checked onclick="event.stopPropagation(); toggleSimAction('${act.id}')">
+          <input type="checkbox" id="${act.id}" class="sim-chk" style="width: 1.1rem; height: 1.1rem; accent-color: var(--c-blue); cursor: pointer;" checked>
         </div>
         <div style="flex: 1;">
           <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem;">
@@ -965,14 +1059,6 @@ function initSimulator() {
   updateSimulatorProgress();
 }
 
-window.toggleSimAction = function(id) {
-  const chk = document.getElementById(id);
-  if (chk) {
-    chk.checked = !chk.checked;
-    updateSimulatorProgress();
-  }
-};
-
 function updateSimulatorProgress() {
   let totalVal = 0;
   
@@ -985,19 +1071,16 @@ function updateSimulatorProgress() {
     });
   });
 
-  // Calculate percentage based on total possible if everything was activated (143)
-  // And map it so 143 total = 35.75% 
-  const progressPercent = (totalVal / 4);
+  // Escalat proporcional perquè el 100% de les accions (45.5% de mitjana simple)
+  // equivalgui al 49.6% d'estalvi econòmic real ponderat.
+  const progressPercent = (totalVal / 4) * (49.6 / 45.5);
   
   const textEl = document.getElementById('sim-progress-text');
   const barEl = document.getElementById('sim-progress-bar');
   
   if (textEl) textEl.textContent = progressPercent.toFixed(1) + '%';
   if (barEl) {
-    // Map max progress ~36% to width 100% of the bar, since the objective is -30%
-    // actually, let's just make the bar fill up to 100% visually when we reach 30%.
-    // Or just (progressPercent / 30) * 100
-    let barWidth = (progressPercent / 30) * 100;
+    let barWidth = (progressPercent / 49.6) * 100;
     if (barWidth > 100) barWidth = 100;
     barEl.style.width = barWidth + '%';
     
@@ -1025,5 +1108,15 @@ function updateSimulatorProgress() {
         }
       }
     });
+  });
+
+  // Dispara el recàlcul a la calculadora si hi ha algun select (principal o de comparació) amb l'opció "simulador"
+  const selects = document.querySelectorAll('select[id^="sel-"]');
+  selects.forEach(sel => {
+      const panel = sel.closest('.calc-panel');
+      const compareSel = panel ? panel.querySelector('.compare-select') : null;
+      if (sel.value === 'simulador' || (compareSel && compareSel.value === 'simulador')) {
+          sel.dispatchEvent(new Event('change'));
+      }
   });
 }
