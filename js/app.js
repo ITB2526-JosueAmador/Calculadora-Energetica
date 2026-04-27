@@ -21,6 +21,47 @@ const BASE_COSTS = {
   cleaning: 1204.98 / 12,
 };
 
+// Consum base mensual: kWh (electricitat) i m³ (aigua)
+// Estimació a partir de la factura F046 i F056 del centre
+const BASE_CONSUMPTION = {
+  electric: 1850 / 12,   // ~1.850 kWh/any ≈ 154 kWh/mes
+  water: 320 / 12,       // ~320 m³/any ≈ 26,7 m³/mes
+};
+
+const CONSUMPTION_UNITS = {
+  electric: 'kWh',
+  water: 'm³',
+};
+
+// Mapa de factors de consum real: només escenaris que afecten el consum físic
+// S'exclouen:
+//   - Escenaris que només afecten el preu (tarifes, cànons, sequera)
+//   - Causes externes com falles d'instal·lacions (avaries, deteriorament)
+//   - Globals (all_opt/all_pes) que es calculen dinàmicament
+const CONSUMPTION_FACTOR_MAP = {
+  // Electricitat — escenaris de decisió operativa que canvien el consum real
+  elec_opt_solar: 0.68,
+  elec_opt_led: 0.80,
+  elec_opt_smart: 0.85,
+  elec_opt_cert: 0.90,
+  // elec_pes_avaria: EXCLÒS — causa externa (falla d'instal·lació)
+  // elec_pes_vell: EXCLÒS — causa externa (deteriorament d'instal·lació)
+  // elec_pes_tarifa: EXCLÒS — només puja el preu, no el consum
+  // elec_pes_perd: EXCLÒS — pèrdua de contracte, no afecta consum
+
+  // Aigua — escenaris de decisió operativa que canvien el consum real
+  water_opt_grises: 0.70,
+  water_opt_sensors: 0.82,
+  water_opt_reg: 0.88,
+  water_opt_cistern: 0.93,
+  // water_pes_sequera: EXCLÒS — puja el preu per m³, no el consum
+  // water_pes_canon: EXCLÒS — increment fiscal, no afecta consum
+  water_pes_fuites: 1.22,
+  water_pes_ocup: 1.14,
+
+  base: 1.00,
+};
+
 // Factor multiplicador per escenari
 // base = tendència actual sense canvis
 // opt_X = escenaris optimistes amb millores específiques
@@ -89,7 +130,7 @@ const SCENARIO_META = {
 
   all_opt: {
     label: '🌟 Tot optimista (totes les millores)', group: 'opt', factor: 0.72,
-    desc: "Escenari global on s'apliquen totes les millores possibles simultàniament: energètiques, hídrica, digitalització i neteja ecològica. Màxim estalvi assolible."
+    desc: "Equivalent al simulador amb totes les accions activades. El factor s'aplica per categoria per coincidir exactament amb el simulador."
   },
   all_pes: {
     label: '💀 Tot pessimista (pitjor cas possible)', group: 'pessimist', factor: 1.22,
@@ -331,18 +372,41 @@ function calcProjection(type, mode, year, scenario = 'base') {
   let scenarioFact = SCENARIO_FACTORS[scenario] ?? SCENARIO_META[scenario]?.factor ?? 1.0;
   let customDesc = null;
 
-  if (scenario === 'simulador') {
-    const typeMap = { 'electric': 'energia', 'water': 'aigua', 'office': 'consumibles', 'cleaning': 'neteja' };
+  // Factor de consum físic (només per electric/water)
+  let consumptionFact = 1.0;
+  const hasConsumption = (type === 'electric' || type === 'water');
+
+  // Helper: calcular factor per-categoria des de les accions del simulador
+  const typeMap = { 'electric': 'energia', 'water': 'aigua', 'office': 'consumibles', 'cleaning': 'neteja' };
+  const _calcSimFactor = (allChecked) => {
     const cat = typeMap[type];
     let catVal = 0;
     if (typeof SIMULATOR_ACTIONS !== 'undefined' && SIMULATOR_ACTIONS[cat]) {
       SIMULATOR_ACTIONS[cat].forEach(act => {
-        const chk = document.getElementById(act.id);
-        if (chk && chk.checked) catVal += act.val;
+        if (allChecked) {
+          catVal += act.val;
+        } else {
+          const chk = document.getElementById(act.id);
+          if (chk && chk.checked) catVal += act.val;
+        }
       });
     }
-    scenarioFact = Math.max(0, 1 - (catVal / 100));
+    return { factor: Math.max(0, 1 - (catVal / 100)), catVal, cat };
+  };
+
+  if (scenario === 'all_opt') {
+    // "Tot optimista" = simulador amb totes les opcions activades (per-categoria)
+    const { factor, catVal, cat } = _calcSimFactor(true);
+    scenarioFact = factor;
+    consumptionFact = factor;
+    customDesc = `Totes les millores activades: reducció del ${catVal}% per a la categoria de ${cat}.`;
+  } else if (scenario === 'simulador') {
+    const { factor, catVal, cat } = _calcSimFactor(false);
+    scenarioFact = factor;
+    consumptionFact = factor;
     customDesc = `Reducció del ${catVal}% basada en les opcions seleccionades al simulador per a la categoria de ${cat}.`;
+  } else if (hasConsumption) {
+    consumptionFact = CONSUMPTION_FACTOR_MAP[scenario] ?? 1.0;
   }
 
   const indices = mode === 'annual'
@@ -351,14 +415,22 @@ function calcProjection(type, mode, year, scenario = 'base') {
 
   let months = [];
   let total = 0;
+  let totalConsumption = 0;
+  let consumptionMonths = [];
 
   for (const i of indices) {
     const val = base * seasonal[i] * yearAdj * scenarioFact;
     months.push({ label: MONTHS_CA[i], value: val });
     total += val;
+
+    if (hasConsumption) {
+      const cons = BASE_CONSUMPTION[type] * seasonal[i] * consumptionFact;
+      consumptionMonths.push({ label: MONTHS_CA[i], value: cons });
+      totalConsumption += cons;
+    }
   }
 
-  return { total, months, yearAdj, scenarioFact, customDesc };
+  return { total, months, yearAdj, scenarioFact, customDesc, totalConsumption, consumptionMonths, consumptionFact };
 }
 
 // ---- CALCULADORA: renderitzar resultat ----
@@ -366,16 +438,19 @@ function renderCalcResult(containerId, type, mode, year, scenario, compareScenar
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const { total, months, scenarioFact, customDesc } = calcProjection(type, mode, year, scenario);
+  const projection = calcProjection(type, mode, year, scenario);
+  const { total, months, scenarioFact, customDesc, totalConsumption, consumptionMonths, consumptionFact } = projection;
 
   let compTotal = null;
   let compMonths = null;
   let compMeta = null;
+  let compConsumption = null;
   if (compareScenario && compareScenario !== scenario) {
     const comp = calcProjection(type, mode, year, compareScenario);
     compTotal = comp.total;
     compMonths = comp.months;
     compMeta = SCENARIO_META[compareScenario] || { label: 'Comparació' };
+    compConsumption = comp.totalConsumption;
   }
 
   const currentHash = `${year}_${scenario}_${compareScenario}_${total}_${compTotal}`;
@@ -440,6 +515,50 @@ function renderCalcResult(containerId, type, mode, year, scenario, compareScenar
   }
   comparisonHtml += `</div>`;
 
+  // ── Bloc de consum físic (només electricitat i aigua) ──
+  const hasConsumption = (type === 'electric' || type === 'water');
+  let consumptionHtml = '';
+  if (hasConsumption && totalConsumption > 0) {
+    const unit = CONSUMPTION_UNITS[type];
+    const icon = type === 'electric' ? '⚡' : '💧';
+    const accentColor = type === 'electric' ? 'var(--c-gold)' : 'var(--c-blue)';
+    const bgColor = type === 'electric' ? 'rgba(232,193,106,0.08)' : 'rgba(92,168,232,0.08)';
+    const borderColor = type === 'electric' ? 'rgba(232,193,106,0.25)' : 'rgba(92,168,232,0.25)';
+
+    // Determinar si l'escenari afecta el consum o només el preu
+    const isConsumptionScenario = (consumptionFact !== 1.0);
+    const scenarioNote = !isConsumptionScenario && scenario !== 'base'
+      ? `<div style="font-size:0.72rem; color:var(--c-muted); margin-top:0.4rem; font-style:italic;">ℹ️ Aquest escenari només afecta el cost, no el consum físic de recursos.</div>`
+      : '';
+
+    // Comparació de consum si hi ha escenari de comparació
+    let compConsHtml = '';
+    if (compConsumption !== null && compConsumption !== totalConsumption) {
+      const diffCons = totalConsumption - compConsumption;
+      const diffConsFmt = diffCons > 0 ? '+' + fmtShort(diffCons) : (diffCons < 0 ? fmtShort(diffCons) : '0');
+      const diffConsColor = diffCons > 0 ? 'var(--c-red)' : 'var(--c-green)';
+      compConsHtml = `
+        <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-top:0.35rem; padding-top:0.35rem; border-top:1px dashed rgba(255,255,255,0.08);">
+          <span style="color:var(--c-muted)">Diferència consum:</span>
+          <strong style="color:${diffConsColor}">${diffConsFmt} ${unit}</strong>
+        </div>`;
+    }
+
+    consumptionHtml = `
+      <div style="margin-top:0.85rem; padding:0.85rem 1rem; background:${bgColor}; border-radius:10px; border:1px solid ${borderColor};">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
+          <span style="font-size:0.82rem; color:var(--c-muted); font-weight:500;">${icon} Consum físic estimat</span>
+          <strong style="font-size:1.05rem; color:${accentColor}; font-weight:700;">${fmtShort(totalConsumption)} ${unit}</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:0.78rem;">
+          <span style="color:var(--c-muted)">Factor de consum:</span>
+          <span style="color:${accentColor}">×${consumptionFact.toFixed(2)}</span>
+        </div>
+        ${compConsHtml}
+        ${scenarioNote}
+      </div>`;
+  }
+
   container.querySelector('.result-main').textContent = fmt(total) + ' €';
   container.querySelector('.result-label').innerHTML =
     `${typeLabels[type]} per al ${modeLabel} &nbsp;
@@ -448,6 +567,7 @@ function renderCalcResult(containerId, type, mode, year, scenario, compareScenar
        (×${scenarioFact.toFixed(2)})
      </span>
      <div style="margin-top:0.5rem;font-size:0.78rem;color:var(--c-muted);font-style:italic">${finalDesc}</div>
+     ${consumptionHtml}
      ${comparisonHtml}`;
 
   const compareSelectNode = container.querySelector('.compare-select');
